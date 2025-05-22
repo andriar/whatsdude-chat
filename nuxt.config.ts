@@ -16,6 +16,19 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
     '@nuxt/icon',
     '@nuxt/fonts',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@nuxtjs/supabase',
   ],
+
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/favicon.ico', // Or your favicon's path
+        },
+      ],
+    },
+  },
 })
