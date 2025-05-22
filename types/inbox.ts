@@ -4,7 +4,7 @@ export interface IConversation {
   avatar: string
   preview: string
   unread?: number
-  active: boolean
+  last_message_at: string
 }
 
 export interface IMessage {

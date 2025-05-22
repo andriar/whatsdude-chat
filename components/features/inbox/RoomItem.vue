@@ -5,23 +5,36 @@
   ]">
     <UAvatar :src="conversation.avatar" size="xl" />
     <div class="ml-3 flex-1">
-      <div class="font-semibold">{{ conversation.name }}</div>
-      <div class="text-sm text-gray-400">{{ conversation.preview }}</div>
+      <div class="flex items-center justify-between">
+        <div class="font-semibold">{{ conversation.name }}</div>
+        <div class="text-xs text-gray-400">{{ conversation.last_message_at }}</div>
+      </div>
+      <div class="text-sm text-gray-400 flex items-center justify-between">{{ conversation.preview }} <div
+          v-if="unread && unread !== '0'"
+          class="bg-indigo-500 rounded-full text-white min-w-5 h-5 flex items-center justify-center text-xs">
+          {{ unread }}
+        </div>
+      </div>
     </div>
-    <div v-if="conversation.unread"
-      class="bg-indigo-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-      {{ conversation.unread }}
-    </div>
+
   </div>
 </template>
 
 <script lang="ts" setup>
 import type { IConversation } from '~/types/inbox';
 
-defineProps<{
+const props = defineProps<{
   conversation: IConversation
   active: boolean
 }>()
+
+const unread = computed(() => {
+  if (props.conversation.unread === 0) return '0'
+
+  if (props.conversation.unread && props.conversation.unread > 9) return '9+'
+
+  return props.conversation.unread?.toString()
+})
 
 defineEmits<{
   (e: 'select', conversation: IConversation): void
