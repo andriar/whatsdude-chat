@@ -10,18 +10,8 @@
         </div>
         <UTabs :items="tabs" class="px-6 pb-4" />
         <div class="flex-1 overflow-y-auto">
-          <div v-for="conv in conversations" :key="conv.id"
-            :class="['flex items-center px-6 py-3 cursor-pointer border-l-4 transition hover:bg-gray-50', conv.active ? 'bg-gray-100 border-indigo-500' : 'border-transparent']"
-            @click="selectActiveConversation(conv)">
-            <UAvatar :src="conv.avatar" size="md" />
-            <div class="ml-3 flex-1">
-              <div class="font-semibold">{{ conv.name }}</div>
-              <div class="text-sm text-gray-400">{{ conv.preview }}</div>
-            </div>
-            <div v-if="conv.unread"
-              class="bg-indigo-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">{{
-                conv.unread }}</div>
-          </div>
+          <RoomItem v-for="conv in conversations" :key="conv.id" :conversation="conv" :active="conv.active"
+            @select="selectActiveConversation" />
         </div>
       </section>
 
@@ -76,6 +66,15 @@ definePageMeta({
   layout: 'sidebar',
 })
 
+interface Conversation {
+  id: number
+  name: string
+  avatar: string
+  preview: string
+  unread?: number
+  active: boolean
+}
+
 const tabs = [
   { label: 'General' },
   { label: 'Total' },
@@ -111,8 +110,8 @@ const conversations = [
   { id: 106, name: 'Zoe.W', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Final thoughts on the project', active: false }
 ];
 
-const activeConversation = ref(conversations[0]);
-function selectActiveConversation(conv: any) {
+const activeConversation = ref<Conversation>(conversations[0]);
+function selectActiveConversation(conv: Conversation) {
   // Set all conversations to inactive first
   conversations.forEach(c => c.active = false);
 
@@ -120,10 +119,8 @@ function selectActiveConversation(conv: any) {
   const conversation = conversations.find(c => c.id === conv.id);
   if (conversation) {
     conversation.active = true;
+    activeConversation.value = conversation;
   }
-
-  // Update active conversation reference
-  activeConversation.value = conversation;
 }
 
 const messages = [
