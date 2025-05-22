@@ -1,0 +1,26 @@
+<template>
+  <div class="flex-1 overflow-y-auto">
+    <RoomItem v-for="conv in items" :key="conv.id" :conversation="conv" :active="activeConversation.id === conv.id"
+      @select="selectActiveConversation" />
+  </div>
+</template>
+
+<script lang="ts" setup>
+import type { IConversation } from '~/types/inbox';
+import RoomItem from './RoomItem.vue';
+
+defineProps<{
+  items: IConversation[],
+  activeConversation: IConversation
+}>()
+
+const emit = defineEmits<{
+  (e: 'select', conv: IConversation): void
+}>()
+
+function selectActiveConversation(conv: IConversation) {
+  emit('select', conv)
+}
+</script>
+
+<style></style>

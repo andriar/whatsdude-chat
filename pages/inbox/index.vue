@@ -9,10 +9,8 @@
           <UButton icon="i-lucide-plus" size="sm" variant="ghost" />
         </div>
         <UTabs :items="tabs" class="px-6 pb-4" />
-        <div class="flex-1 overflow-y-auto">
-          <RoomItem v-for="conv in conversations" :key="conv.id" :conversation="conv" :active="conv.active"
-            @select="selectActiveConversation" />
-        </div>
+        <RoomListContainer :items="conversations" :active-conversation="activeConversation"
+          @select="selectActiveConversation" />
       </section>
 
       <!-- Chat Area -->
@@ -61,57 +59,51 @@
 </template>
 
 <script lang="ts" setup>
+import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue';
+import type { IConversation, IMessage, ITab } from '~/types/inbox'
+
 definePageMeta({
   middleware: ['auth'],
   layout: 'sidebar',
 })
 
-interface Conversation {
-  id: number
-  name: string
-  avatar: string
-  preview: string
-  unread?: number
-  active: boolean
-}
-
-const tabs = [
+const tabs: ITab[] = [
   { label: 'General' },
   { label: 'Total' },
 ];
 
-const conversations = [
-  { id: 1, name: 'Michael.B', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Sent you the file', unread: 2, active: true },
-  { id: 2, name: 'Katie.W', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'See you tomorrow...', unread: 3, active: false },
-  { id: 3, name: 'Arnold.J', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Hi 👋 I checked the layout agai...', active: false },
-  { id: 4, name: 'Fannie. K', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'okay!', active: false },
-  { id: 5, name: 'Isaac.A', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'I don\'t think we\'re going to finish ...', active: false },
-  { id: 6, name: 'Jacob', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Sorry, Friend. I won\'t do it again!', active: false },
-  { id: 7, name: 'Emma.S', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Thanks for the update!', active: false },
-  { id: 8, name: 'Oliver.P', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Meeting at 3pm tomorrow', active: false },
-  { id: 9, name: 'Ava.M', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Project files sent', active: false },
-  { id: 10, name: 'William.T', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Great work on the presentation', active: false },
-  { id: 11, name: 'Sophia.R', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Let\'s discuss this further', active: false },
-  { id: 12, name: 'James.H', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Can you review this?', active: false },
-  { id: 13, name: 'Isabella.C', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Updates on the client meeting', active: false },
-  { id: 14, name: 'Lucas.N', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'New design mockups', active: false },
-  { id: 15, name: 'Mia.L', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Schedule for next week', active: false },
-  { id: 16, name: 'Ethan.G', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Quick question about the API', active: false },
-  { id: 17, name: 'Charlotte.D', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Team lunch today?', active: false },
-  { id: 18, name: 'Alexander.F', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Bug fixes completed', active: false },
-  { id: 19, name: 'Harper.B', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'New feature request', active: false },
-  { id: 20, name: 'Mason.V', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Code review feedback', active: false },
-  { id: 21, name: 'Evelyn.K', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Client feedback received', active: false },
-  { id: 22, name: 'Daniel.Q', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Testing phase complete', active: false },
-  { id: 23, name: 'Scarlett.X', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Documentation updates', active: false },
-  { id: 24, name: 'Henry.Z', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Release schedule', active: false },
-  { id: 25, name: 'Victoria.Y', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Performance metrics', active: false },
+const conversations: IConversation[] = [
+  { id: 1, name: 'Michael.B', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Sent you the file', unread: 2 },
+  { id: 2, name: 'Katie.W', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'See you tomorrow...', unread: 3 },
+  { id: 3, name: 'Arnold.J', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Hi 👋 I checked the layout agai...' },
+  { id: 4, name: 'Fannie. K', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'okay!' },
+  { id: 5, name: 'Isaac.A', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'I don\'t think we\'re going to finish ...' },
+  { id: 6, name: 'Jacob', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Sorry, Friend. I won\'t do it again!' },
+  { id: 7, name: 'Emma.S', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Thanks for the update!' },
+  { id: 8, name: 'Oliver.P', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Meeting at 3pm tomorrow' },
+  { id: 9, name: 'Ava.M', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Project files sent' },
+  { id: 10, name: 'William.T', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Great work on the presentation' },
+  { id: 11, name: 'Sophia.R', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Let\'s discuss this further' },
+  { id: 12, name: 'James.H', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Can you review this?' },
+  { id: 13, name: 'Isabella.C', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Updates on the client meeting' },
+  { id: 14, name: 'Lucas.N', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'New design mockups' },
+  { id: 15, name: 'Mia.L', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Schedule for next week' },
+  { id: 16, name: 'Ethan.G', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Quick question about the API' },
+  { id: 17, name: 'Charlotte.D', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Team lunch today?' },
+  { id: 18, name: 'Alexander.F', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Bug fixes completed' },
+  { id: 19, name: 'Harper.B', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'New feature request' },
+  { id: 20, name: 'Mason.V', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Code review feedback' },
+  { id: 21, name: 'Evelyn.K', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Client feedback received' },
+  { id: 22, name: 'Daniel.Q', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Testing phase complete' },
+  { id: 23, name: 'Scarlett.X', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Documentation updates' },
+  { id: 24, name: 'Henry.Z', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Release schedule' },
+  { id: 25, name: 'Victoria.Y', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Performance metrics' },
   // ... continuing with similar pattern for remaining entries up to id: 106
-  { id: 106, name: 'Zoe.W', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Final thoughts on the project', active: false }
+  { id: 106, name: 'Zoe.W', avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg', preview: 'Final thoughts on the project' }
 ];
 
-const activeConversation = ref<Conversation>(conversations[0]);
-function selectActiveConversation(conv: Conversation) {
+const activeConversation = ref<IConversation>(conversations[0]);
+function selectActiveConversation(conv: IConversation) {
   // Set all conversations to inactive first
   conversations.forEach(c => c.active = false);
 
@@ -123,7 +115,7 @@ function selectActiveConversation(conv: Conversation) {
   }
 }
 
-const messages = [
+const messages: IMessage[] = [
   { id: 1, from: 'me', type: 'text', text: 'Hello!' },
   { id: 2, from: 'them', type: 'audio', duration: '00:16' },
   { id: 3, from: 'them', type: 'text', text: 'Hi 👋' },

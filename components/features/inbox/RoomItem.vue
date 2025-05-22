@@ -1,9 +1,9 @@
 <template>
   <div @click="$emit('select', conversation)" :class="[
-    'flex items-center px-6 py-3 cursor-pointer border-l-4 transition hover:bg-gray-50',
+    'flex items-center px-6 py-3 cursor-pointer border-l-4 transition select-none hover:bg-gray-50',
     active ? 'bg-gray-100 border-indigo-500' : 'border-transparent'
   ]">
-    <UAvatar :src="conversation.avatar" size="md" />
+    <UAvatar :src="conversation.avatar" size="xl" />
     <div class="ml-3 flex-1">
       <div class="font-semibold">{{ conversation.name }}</div>
       <div class="text-sm text-gray-400">{{ conversation.preview }}</div>
@@ -16,21 +16,14 @@
 </template>
 
 <script lang="ts" setup>
-interface Conversation {
-  id: number
-  name: string
-  avatar: string
-  preview: string
-  unread?: number
-  active: boolean
-}
+import type { IConversation } from '~/types/inbox';
 
 defineProps<{
-  conversation: Conversation
+  conversation: IConversation
   active: boolean
 }>()
 
 defineEmits<{
-  (e: 'select', conversation: Conversation): void
+  (e: 'select', conversation: IConversation): void
 }>()
 </script>
