@@ -18,9 +18,9 @@
 import type { IConversation, IMessage } from '~/types/inbox';
 
 // import components
-import HeaderBar from '~/components/features/inbox/chat/HeaderBar.vue';
-import MesseagesContainer from '~/components/features/inbox/chat/MesseagesContainer.vue';
-import MessagesInput from '~/components/features/inbox/chat/MessagesInput.vue';
+import HeaderBar from '~/components/features/inbox/chat/header-area/HeaderBar.vue';
+import MessagesInput from '~/components/features/inbox/chat/input-area/MessagesInput.vue';
+import MesseagesContainer from '~/components/features/inbox/chat/messages-area/MessagesContainer.vue';
 
 defineProps<{
   activeConversation: IConversation | null;
