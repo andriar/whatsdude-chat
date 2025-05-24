@@ -37,51 +37,40 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  'update:message': [value: string];
+  send: [];
 }>();
 
 const sendMessage = () => {
   if (props.message.trim()) {
-    console.log('Sending message:', props.message);
-
-    // Clear message after sending
-    clearMessage();
+    emit('send');
   }
 };
 
-const clearMessage = () => {
-  emit('update:message', '');
-};
-
+// List of rules that make the send button disabled:
+// 1. When the message is empty (no text or only whitespace)
 const isSendButtonDisabled = computed(() => {
   const isMessageEmpty = !props.message.trim();
-
   return isMessageEmpty;
 });
 
 const handleFileAttachment = () => {
   console.log('File attachment clicked');
-  // Add file attachment logic
 };
 
 const handleImageUpload = () => {
   console.log('Image upload clicked');
-  // Add image upload logic
 };
 
 const handlePresentationUpload = () => {
   console.log('Presentation upload clicked');
-  // Add presentation upload logic
 };
 
 const handleArchiveUpload = () => {
   console.log('Archive upload clicked');
-  // Add archive upload logic
 };
 
 const handlePhoneCall = () => {
   console.log('Phone call clicked');
-  // Add phone call logic
 };
 
 interface ActionButton {

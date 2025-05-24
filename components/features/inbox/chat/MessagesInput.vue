@@ -15,11 +15,12 @@
           :ui="{
             base: 'h-12 w-full border-0 rounded-none p-0 focus:ring-0 focus:outline-none  text-black placeholder:text-black-700 text-sm font-normal',
           }"
+          @keydown="handleKeydown"
         />
       </div>
 
       <!-- Action Buttons Row -->
-      <MessageInputActions v-model:message="message" />
+      <MessageInputActions :message="message" @send="sendMessage" />
     </div>
   </div>
 </template>
@@ -28,6 +29,28 @@
 import MessageInputActions from './MessageInputActions.vue';
 
 const message = ref('');
+
+const handleKeydown = (event: KeyboardEvent) => {
+  // Send message when Enter is pressed (without Shift)
+  if (event.key === 'Enter' && !event.shiftKey) {
+    event.preventDefault(); // Prevent adding new line
+    sendMessage();
+  }
+  // Allow Shift+Enter for new line (default behavior)
+};
+
+const clearMessage = () => {
+  message.value = '';
+};
+
+const sendMessage = () => {
+  if (message.value.trim()) {
+    console.log('Sending message:', message.value);
+
+    // Clear message after sending
+    clearMessage();
+  }
+};
 </script>
 
 <style scoped></style>
