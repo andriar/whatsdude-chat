@@ -1,13 +1,48 @@
-/* Import Inter Font - Must be at the top */
+/* Import Inter Font */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-/* Tailwind and Nuxt UI imports */
 @import 'tailwindcss';
 @import '@nuxt/ui';
 
-/* Custom Color Configuration for Qiscus Brand */
+/* Custom Theme Configuration */
 @theme {
-  /* Base Brand Colors */
+  /* Font Family */
+  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
+    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* Font Weights */
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+
+  /* Title Typography Sizes */
+  --font-size-title-xl: 2.5rem; /* 40px */
+  --font-size-title-lg: 2rem; /* 32px */
+  --font-size-title-md: 1.5rem; /* 24px */
+  --font-size-title-sm: 1.25rem; /* 20px */
+
+  /* Body Typography Sizes */
+  --font-size-body-lg: 1.125rem; /* 18px */
+  --font-size-body-md: 1rem; /* 16px */
+  --font-size-body-sm: 0.875rem; /* 14px */
+  --font-size-body-xs: 0.75rem; /* 12px */
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+  --line-height-loose: 2;
+  --line-height-14-spacing-20: 1.43;
+
+  /* Letter Spacing */
+  --letter-spacing-tight: -0.025em;
+  --letter-spacing-normal: 0;
+
+  /* ========================================
+      DESIGN TOKEN COLORS (Raw Values)
+  ======================================== */
+
+  /* Brand Colors - Green */
   --color-green-200: #d1ece5;
   --color-green-300: #a1d9cb;
   --color-green-400: #6ec5b2;
@@ -16,6 +51,7 @@
   --color-green-700: #24584e;
   --color-green-800: #1b312c;
 
+  /* Brand Colors - Navy */
   --color-navy-200: #c4cbd9;
   --color-navy-300: #8a9ab3;
   --color-navy-400: #506c8f;
@@ -24,7 +60,7 @@
   --color-navy-700: #14263a;
   --color-navy-800: #121923;
 
-  /* Black/Grey Scale */
+  /* Neutral Colors */
   --color-black-600: #bfbfbf;
   --color-black-700: #a0a0a0;
   --color-black-800: #565656;
@@ -56,7 +92,7 @@
   --color-negative-300: #f7857e;
   --color-negative-400: #eb5757;
 
-  /* Error & Warning */
+  /* Semantic Colors */
   --color-error-100: #ffd7d2;
   --color-error-400: #ef4c00;
   --color-error-800: #9d380f;
@@ -65,19 +101,27 @@
   --color-warning-400: #d78e08;
   --color-warning-800: #a0772a;
 
-  /* Link */
   --color-link-100: #eefafe;
   --color-link-400: #007bff;
   --color-link-800: #2553a5;
 
-  /* Primary Brand Aliases */
-  --color-primary: #27b199;
-  --color-secondary: #01416c;
-}
+  /* ========================================
+  SEMANTIC TOKENS (Atomic Usage)
+  ======================================== */
 
-/* Optional: Extend default Tailwind colors */
-@theme {
-  /* Map to standard Tailwind color names for easier usage */
+  /* Primary Brand Mapping */
+  --color-primary: var(--color-green-500);
+  --color-secondary: var(--color-navy-500);
+  --color-error: var(--color-error-400);
+  --color-warning: var(--color-warning-400);
+  --color-disabled: var(--color-black-700);
+  --color-positive: var(--color-positive-400);
+  --color-progressive: var(--color-progressive-400);
+
+  /* Semantic Colors Mapping */
+  --color-black: var(--color-black-900);
+  --color-white: var(--color-white-100);
+
   --color-primary-200: var(--color-green-200);
   --color-primary-300: var(--color-green-300);
   --color-primary-400: var(--color-green-400);
@@ -95,107 +139,79 @@
   --color-secondary-800: var(--color-navy-800);
 }
 
-/* Typography Configuration */
-@theme {
-  /* Font Family */
-  --font-family-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont,
-    'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+/* ========================================
+    BASE STYLES
+======================================== */
+@layer base {
+  body {
+    font-family: var(--font-family-sans);
+    font-weight: var(--font-weight-regular);
+    color: var(--color-black-900);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary) transparent;
+  }
+}
+
+/* ========================================
+    UTILITY CLASSES
+======================================== */
+@layer components {
+  /* Typography - Titles */
+  .title-xl {
+    font-size: var(--font-size-title-xl);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .title-lg {
+    font-size: var(--font-size-title-lg);
+    line-height: var(--line-height-tight);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .title-md {
+    font-size: var(--font-size-title-md);
+    line-height: var(--line-height-tight);
+  }
+
+  .title-sm {
+    font-size: var(--font-size-title-sm);
+    line-height: var(--line-height-tight);
+  }
+
+  /* Typography - Body */
+  .body-lg {
+    font-size: var(--font-size-body-lg);
+    line-height: var(--line-height-normal);
+  }
+
+  .body-md {
+    font-size: var(--font-size-body-md);
+    line-height: var(--line-height-normal);
+  }
+
+  .body-sm {
+    font-size: var(--font-size-body-sm);
+    line-height: var(--line-height-14-spacing-20);
+  }
+
+  .body-xs {
+    font-size: var(--font-size-body-xs);
+    line-height: var(--line-height-normal);
+  }
 
   /* Font Weights */
-  --font-weight-regular: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
+  .font-regular {
+    font-weight: var(--font-weight-regular);
+  }
 
-  /* Title Typography Sizes */
-  --font-size-title-xl: 2.5rem; /* 40px - Title Extra Large */
-  --font-size-title-lg: 2rem; /* 32px - Title Large */
-  --font-size-title-md: 1.5rem; /* 24px - Title Medium */
-  --font-size-title-sm: 1.25rem; /* 20px - Title Small */
+  .font-medium {
+    font-weight: var(--font-weight-medium);
+  }
 
-  /* Body Typography Sizes */
-  --font-size-body-lg: 1.125rem; /* 18px - Body Large */
-  --font-size-body-md: 1rem; /* 16px - Body Medium */
-  --font-size-body-sm: 0.875rem; /* 14px - Body Small */
-  --font-size-body-xs: 0.75rem; /* 12px - Body Extra Small */
-
-  /* Line Heights based on Spacing System */
-  --line-height-tight: 1.2; /* ~120% */
-  --line-height-normal: 1.5; /* ~150% */
-  --line-height-relaxed: 1.75; /* ~175% */
-  --line-height-loose: 2; /* ~200% */
-
-  /* Specific Line Heights for 14px text */
-  --line-height-14-spacing-20: 1.43; /* 20px / 14px = 1.43 */
-
-  /* Letter Spacing */
-  --letter-spacing-tight: -0.025em;
-  --letter-spacing-normal: 0;
-}
-
-/* Base Typography Reset */
-body {
-  font-family: var(--font-family-sans);
-  font-weight: var(--font-weight-regular);
-  color: var(--color-black-900);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-/* Typography Utility Classes */
-
-/* Title Styles */
-.title-xl {
-  font-size: var(--font-size-title-xl);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--letter-spacing-tight);
-}
-
-.title-lg {
-  font-size: var(--font-size-title-lg);
-  line-height: var(--line-height-tight);
-  letter-spacing: var(--letter-spacing-tight);
-}
-
-.title-md {
-  font-size: var(--font-size-title-md);
-  line-height: var(--line-height-tight);
-}
-
-.title-sm {
-  font-size: var(--font-size-title-sm);
-  line-height: var(--line-height-tight);
-}
-
-/* Body Styles */
-.body-lg {
-  font-size: var(--font-size-body-lg);
-  line-height: var(--line-height-normal);
-}
-
-.body-md {
-  font-size: var(--font-size-body-md);
-  line-height: var(--line-height-normal);
-}
-
-.body-sm {
-  font-size: var(--font-size-body-sm);
-  line-height: var(--line-height-14-spacing-20);
-}
-
-.body-xs {
-  font-size: var(--font-size-body-xs);
-  line-height: var(--line-height-normal);
-}
-
-/* Font Weight Classes */
-.font-regular {
-  font-weight: var(--font-weight-regular);
-}
-
-.font-medium {
-  font-weight: var(--font-weight-medium);
-}
-
-.font-semibold {
-  font-weight: var(--font-weight-semibold);
+  .font-semibold {
+    font-weight: var(--font-weight-semibold);
+  }
 }
