@@ -21,7 +21,8 @@
 </template>
 
 <script lang="ts" setup>
-import type { IMessage, ITab } from '@/types/inbox';
+import type { ITab } from '@/types/inbox';
+import { onMounted, onUnmounted } from 'vue';
 
 // import components
 import ChatContainer from '@/components/features/inbox/chat/ChatContainer.vue';
@@ -37,50 +38,69 @@ definePageMeta({
 
 const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }];
 const supabase = useSupabaseClient();
+const user = useSupabaseUser()
+const authId = user.value?.id
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let channel: any = null;
 
-onMounted(async () => {
-  conversationsStore.fetchConversations();
-
-
-  channel = supabase
-    .channel('messages-changes')
-    .on(
-      'postgres_changes',
-      {
-        event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
-        schema: 'public',
-        table: 'messages',
-      },
-      (payload) => {
-        // Handle new messages
-        if (payload.eventType === 'INSERT') {
-          handleNewMessage(payload.new as ISupabaseMessage)
-        }
-        // Handle message updates
-        else if (payload.eventType === 'UPDATE') {
-          // TODO: Update existing message
-          console.log('Updated message:', payload.new)
-        }
-        // Handle message deletions
-        else if (payload.eventType === 'DELETE') {
-          // TODO: Remove message from list
-          console.log('Deleted message:', payload.old)
-        }
+channel = supabase
+  .channel('messages-changes')
+  .on(
+    'postgres_changes',
+    {
+      event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+      schema: 'public',
+      table: 'messages',
+    },
+    (payload) => {
+      // Handle new messages
+      if (payload.eventType === 'INSERT') {
+        handleNewMessage(payload.new as ISupabaseMessage)
       }
-    )
-    .subscribe()
+      // Handle message updates
+      else if (payload.eventType === 'UPDATE') {
+        // TODO: Update existing message
+        console.log('Updated message:', payload.new)
+      }
+      // Handle message deletions
+      else if (payload.eventType === 'DELETE') {
+        // TODO: Remove message from list
+        console.log('Deleted message:', payload.old)
+      }
+    }
+  )
+  .subscribe()
+
+onMounted(() => {
+  conversationsStore.fetchConversations();
 });
 
 function handleNewMessage(payload: ISupabaseMessage) {
-  console.log('New message:', payload)
   conversationsStore.updateLastMessage(payload.conversation_id, payload.content)
-  messageStore.addMessage(payload)
+
+  const isOpenedConversation = payload.conversation_id === conversationsStore.activeConversation.id
+  if (isOpenedConversation) {
+    messageStore.addMessage(payload)
+  }
+
+  // show notification when the message is not from the user and the conversation is not the active conversation
+  if (payload.sender_id !== authId || !isOpenedConversation) {
+    showNotification(payload)
+  }
 }
+
+
+function showNotification(payload: ISupabaseMessage) {
+  const toast = useToast()
+  toast.add({
+    title: 'New message received',
+    description: payload.content,
+  })
+}
+
 
 onUnmounted(() => {
   if (channel) {
