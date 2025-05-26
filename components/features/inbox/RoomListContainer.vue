@@ -1,12 +1,7 @@
 <template>
   <div class="flex-1 overflow-y-auto">
-    <RoomItem
-      v-for="conv in items"
-      :key="conv.id"
-      :conversation="conv"
-      :active="!!(activeConversation && activeConversation?.id === conv.id)"
-      @select="selectActiveConversation"
-    />
+    <RoomItem v-for="conv in items" :key="conv.id" :conversation="conv"
+      :active="!!(activeConversation && activeConversation.id === conv.id)" @select="selectActiveConversation" />
   </div>
 </template>
 
