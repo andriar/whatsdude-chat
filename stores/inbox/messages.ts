@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 import type { IMessage } from '~/types/inbox'
+import type { ISupabaseMessage } from '~/types/supabase';
 
 export const useMessagesStore = defineStore('messagesStore', () => {
   const supabase = useSupabaseClient();
@@ -13,7 +14,7 @@ export const useMessagesStore = defineStore('messagesStore', () => {
     if (error) {
       console.error('Error fetching messages:', error)
     }
-    (data as IMessage[]).forEach((message: IMessage) => {
+    (data as ISupabaseMessage[]).forEach((message: ISupabaseMessage) => {
       addMessage(message)
     })
   }
@@ -22,7 +23,7 @@ export const useMessagesStore = defineStore('messagesStore', () => {
     messages.length = 0
   }
 
-  async function addMessage(message: IMessage) {
+  async function addMessage(message: ISupabaseMessage) {
     const user = useSupabaseUser()
 
     messages.push({

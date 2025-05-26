@@ -29,13 +29,17 @@ const sendMessage = async (message: string) => {
 
   console.log('Sending message:', message);
   const supabase = useSupabaseClient();
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const newMessage: any = {
+    content: message,
+    conversation_id: props.activeConversation.id,
+    sender_id: useSupabaseUser().value?.id || '',
+  };
+
   const { data: _data, error: _error } = await supabase
     .from('messages')
-    .insert({
-      content: message,
-      conversation_id: props.activeConversation.id,
-      sender_id: useSupabaseUser().value?.id,
-    });
+    .insert(newMessage);
 };
 </script>
 
