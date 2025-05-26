@@ -15,7 +15,7 @@
       </section>
 
       <!-- Chat Area -->
-      <ChatContainer :active-conversation="conversationsStore.activeConversation" :messages="messages" />
+      <ChatContainer :active-conversation="conversationsStore.activeConversation" :messages="messageStore.messages" />
     </main>
   </div>
 </template>
@@ -27,6 +27,7 @@ import type { IMessage, ITab } from '@/types/inbox';
 import ChatContainer from '@/components/features/inbox/chat/ChatContainer.vue';
 import RoomListContainer from '@/components/features/inbox/RoomListContainer.vue';
 import { useConversationsStore } from '~/stores/inbox/conversations';
+import { useMessagesStore } from '~/stores/inbox/messages';
 
 definePageMeta({
   middleware: ['auth'],
@@ -36,6 +37,7 @@ definePageMeta({
 const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }];
 const supabase = useSupabaseClient();
 const conversationsStore = useConversationsStore();
+const messageStore = useMessagesStore();
 
 onMounted(async () => {
   conversationsStore.fetchConversations();
@@ -55,6 +57,7 @@ onMounted(async () => {
         if (payload.eventType === 'INSERT') {
           // TODO: Add new message to messages list
           console.log('New message:', payload.new)
+          messageStore.addMessage(payload.new)
         }
         // Handle message updates
         else if (payload.eventType === 'UPDATE') {
@@ -70,24 +73,4 @@ onMounted(async () => {
     )
     .subscribe()
 });
-
-const messages: IMessage[] = [
-  { id: 1, from: 'me', type: 'text', text: 'Hello!' },
-  { id: 2, from: 'them', type: 'audio', duration: '00:16' },
-  { id: 3, from: 'them', type: 'text', text: 'Hi 👋' },
-  { id: 4, from: 'me', type: 'audio', duration: '00:08' },
-  {
-    id: 5,
-    from: 'me',
-    type: 'text',
-    text: 'Okay, thank you very much for the speed',
-  },
-  {
-    id: 6,
-    from: 'them',
-    type: 'file',
-    fileName: 'Brief.doc',
-    fileSize: '148 KB',
-  },
-];
 </script>

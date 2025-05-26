@@ -5,6 +5,7 @@ import { useMessagesStore } from './messages';
 export const useConversationsStore = defineStore('conversationsStore', () => {
 
   const supabase = useSupabaseClient();
+  const messagesStore = useMessagesStore();
 
   // state
   const conversations = reactive<IConversation[]>([])
@@ -16,7 +17,7 @@ export const useConversationsStore = defineStore('conversationsStore', () => {
     if (activeConversation.value?.id === conversation.id) return;
     activeConversation.value = conversation
 
-    const messagesStore = useMessagesStore();
+    messagesStore.resetMessages();
     messagesStore.fetchMessages(conversation.id);
   }
 

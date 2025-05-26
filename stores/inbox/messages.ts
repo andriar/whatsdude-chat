@@ -14,13 +14,30 @@ export const useMessagesStore = defineStore('messagesStore', () => {
       console.error('Error fetching messages:', error)
     }
     (data as IMessage[]).forEach((message: IMessage) => {
-      messages.push(message)
+      addMessage(message)
+    })
+  }
+
+  function resetMessages() {
+    messages.length = 0
+  }
+
+  async function addMessage(message: IMessage) {
+    const user = useSupabaseUser()
+
+    messages.push({
+      id: message.id,
+      from: message.sender_id !== user.value?.id ? 'them' : 'me',
+      type: 'text', 
+      text: message.content,
     })
   }
                                                                     
   // expose managed state
   return {
     messages,
-    fetchMessages
+    fetchMessages,
+    addMessage,
+    resetMessages
   }
 })
