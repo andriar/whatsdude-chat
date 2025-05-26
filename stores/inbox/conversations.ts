@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import type { IConversation } from '~/types/inbox'
+import { useMessagesStore } from './messages';
 
 export const useConversationsStore = defineStore('conversationsStore', () => {
 
-const supabase = useSupabaseClient();
-
+  const supabase = useSupabaseClient();
 
   // state
   const conversations = reactive<IConversation[]>([])
@@ -15,6 +15,9 @@ const supabase = useSupabaseClient();
   function setActiveConversation(conversation: IConversation) {
     if (activeConversation.value?.id === conversation.id) return;
     activeConversation.value = conversation
+
+    const messagesStore = useMessagesStore();
+    messagesStore.fetchMessages(conversation.id);
   }
 
   function addConversation(conversation: IConversation) {
