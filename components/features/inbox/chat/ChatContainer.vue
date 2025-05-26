@@ -7,7 +7,7 @@
     <MessagesContainer :messages="messages" />
 
     <!-- Chat Messages Input Section -->
-    <MessagesInput />
+    <MessagesInput @send="sendMessage" />
   </section>
 </template>
 
@@ -19,10 +19,24 @@ import HeaderBar from '~/components/features/inbox/chat/header-area/HeaderBar.vu
 import MessagesInput from '~/components/features/inbox/chat/input-area/MessagesInput.vue';
 import MessagesContainer from '~/components/features/inbox/chat/messages-area/MessagesContainer.vue';
 
-defineProps<{
+const props = defineProps<{
   activeConversation: IConversation | null;
   messages: IMessage[];
 }>();
+
+const sendMessage = async (message: string) => {
+  if (!props.activeConversation?.id || !useSupabaseUser().value?.id) return;
+
+  console.log('Sending message:', message);
+  const supabase = useSupabaseClient();
+  const { data: _data, error: _error } = await supabase
+    .from('messages')
+    .insert({
+      content: message,
+      conversation_id: props.activeConversation.id,
+      sender_id: useSupabaseUser().value?.id,
+    });
+};
 </script>
 
 <style scoped></style>

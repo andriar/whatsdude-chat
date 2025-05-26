@@ -62,6 +62,23 @@ export const useConversationsStore = defineStore('conversationsStore', () => {
     if (conversations.length > 0) setActiveConversation(conversations[0]);
     loadingConversations.value = false;
   }
+
+  async function updateLastMessage(conversationId: number, lastMessage: string) {
+    const index = conversations.findIndex(conv => conv.id === conversationId);
+    if (index === -1) return;
+    
+    // Create new conversation object with updated last_message
+    const updatedConversation = {
+      ...conversations[index],
+      last_message: lastMessage,
+      preview: lastMessage,
+      last_message_time: new Date().toISOString(),
+      last_message_at: formatDateTime(new Date().toISOString())
+    };
+
+    // Replace old conversation with updated one
+    conversations.splice(index, 1, updatedConversation);
+  }
   
 
   // expose managed state
@@ -72,5 +89,6 @@ export const useConversationsStore = defineStore('conversationsStore', () => {
     setActiveConversation,
     addConversation,
     fetchConversations,
+    updateLastMessage,
   }
 })

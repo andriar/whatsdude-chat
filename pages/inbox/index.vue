@@ -57,7 +57,8 @@ onMounted(async () => {
         if (payload.eventType === 'INSERT') {
           // TODO: Add new message to messages list
           console.log('New message:', payload.new)
-          messageStore.addMessage(payload.new)
+          conversationsStore.updateLastMessage(payload.new.conversation_id, payload.new.content)
+          messageStore.addMessage(payload.new as IMessage)
         }
         // Handle message updates
         else if (payload.eventType === 'UPDATE') {
