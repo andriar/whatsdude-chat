@@ -28,6 +28,7 @@ import ChatContainer from '@/components/features/inbox/chat/ChatContainer.vue';
 import RoomListContainer from '@/components/features/inbox/RoomListContainer.vue';
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import { useMessagesStore } from '~/stores/inbox/messages';
+import type { ISupabaseMessage } from '~/types/supabase';
 
 definePageMeta({
   middleware: ['auth'],
@@ -39,11 +40,14 @@ const supabase = useSupabaseClient();
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let channel: any = null;
+
 onMounted(async () => {
   conversationsStore.fetchConversations();
 
 
-  supabase
+  channel = supabase
     .channel('messages-changes')
     .on(
       'postgres_changes',
@@ -55,10 +59,7 @@ onMounted(async () => {
       (payload) => {
         // Handle new messages
         if (payload.eventType === 'INSERT') {
-          // TODO: Add new message to messages list
-          console.log('New message:', payload.new)
-          conversationsStore.updateLastMessage(payload.new.conversation_id, payload.new.content)
-          messageStore.addMessage(payload.new as IMessage)
+          handleNewMessage(payload.new as ISupabaseMessage)
         }
         // Handle message updates
         else if (payload.eventType === 'UPDATE') {
@@ -73,5 +74,17 @@ onMounted(async () => {
       }
     )
     .subscribe()
+});
+
+function handleNewMessage(payload: ISupabaseMessage) {
+  console.log('New message:', payload)
+  conversationsStore.updateLastMessage(payload.conversation_id, payload.content)
+  messageStore.addMessage(payload)
+}
+
+onUnmounted(() => {
+  if (channel) {
+    supabase.removeChannel(channel);
+  }
 });
 </script>
