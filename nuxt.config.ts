@@ -16,6 +16,7 @@ export default defineNuxtConfig({
     '@nuxt/fonts',
     '@nuxt/ui',
     '@nuxtjs/supabase',
+    '@pinia/nuxt',
   ],
 
   app: {

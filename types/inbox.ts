@@ -5,6 +5,9 @@ export interface IConversation {
   preview: string
   unread?: number
   last_message_at: string
+  conversation_id?: string
+  last_message_time: string
+  last_message: string
 }
 
 export interface IMessage {
