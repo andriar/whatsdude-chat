@@ -10,6 +10,7 @@
     ["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]
   ],
   "cSpell.words": [
+    "autoresize",
     "conv",
     "lucide",
     "Nuxt",
