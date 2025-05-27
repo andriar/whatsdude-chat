@@ -1,12 +1,12 @@
 <template>
   <div class="flex h-screen bg-gray-100 w-full">
-    <!-- Main Content -->
     <main class="flex flex-1 p-8 gap-8">
       <!-- Inbox List -->
       <section class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6">
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
-          <UButton icon="i-lucide-plus" size="sm" variant="ghost" />
+          <UButton icon="i-lucide-plus" size="sm" variant="ghost"
+            @click="createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b')" />
         </div>
         <UTabs :items="tabs" class="px-6 pb-4" />
         <RoomListContainer :items="conversationsStore.conversations"
@@ -23,94 +23,51 @@
 <script lang="ts" setup>
 import type { ITab } from '@/types/inbox';
 import { onMounted, onUnmounted } from 'vue';
-import type { RealtimeChannel } from '#supabase/client';
-
-// import components
 import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue';
 import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue';
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import { useMessagesStore } from '~/stores/inbox/messages';
-import type { ISupabaseMessage } from '~/types/supabase';
 import { usePresence } from '~/composables/usePresence';
+import { useConversationSubscriptions } from '~/composables/useConversationSubscriptions';
+import { useConversationManagement } from '~/composables/useConversationManagement';
 
 definePageMeta({
   middleware: ['auth'],
   layout: 'sidebar',
 });
 
+// Constants
 const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }];
-const supabase = useSupabaseClient();
-const user = useSupabaseUser()
-const authId = user.value?.id
+
+// Composables
+const user = useSupabaseUser();
+const authId = user.value?.id;
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
 const { trackPresence, untrackPresence } = usePresence();
-const toast = useToast();
+const { setupMessageSubscription, setupConversationSubscription } = useConversationSubscriptions();
+const { createNewConversation } = useConversationManagement();
+const supabase = useSupabaseClient();
 
-let channel = null;
+// Realtime subscriptions
+const channel = setupMessageSubscription();
+const conversationChannel = setupConversationSubscription();
 
-channel = supabase
-  .channel('messages-changes')
-  .on(
-    'postgres_changes',
-    {
-      event: '*',
-      schema: 'public',
-      table: 'messages',
-    },
-    (payload: { eventType: 'INSERT' | 'UPDATE' | 'DELETE'; new: unknown; old: unknown }) => {
-      // Handle new messages
-      if (payload.eventType === 'INSERT') {
-        handleNewMessage(payload.new as ISupabaseMessage)
-      }
-      // Handle message updates
-      else if (payload.eventType === 'UPDATE') {
-        // TODO: Update existing message
-        console.log('Updated message:', payload.new)
-      }
-      // Handle message deletions
-      else if (payload.eventType === 'DELETE') {
-        // TODO: Remove message from list
-        console.log('Deleted message:', payload.old)
-      }
-    }
-  )
-  .subscribe()
-
+// Lifecycle hooks
 onMounted(() => {
   conversationsStore.fetchConversations();
-  // Start tracking presence when component mounts
   if (authId) {
     trackPresence(authId);
   }
 });
 
-function handleNewMessage(payload: ISupabaseMessage) {
-  conversationsStore.updateLastMessage(payload.conversation_id, payload.content)
-
-  const isOpenedConversation = conversationsStore.activeConversation?.id === payload.conversation_id
-  if (isOpenedConversation) {
-    messageStore.addMessage(payload)
-  }
-
-  // show notification when the message is not from the user and the conversation is not the active conversation
-  if (!isOpenedConversation) {
-    showNotification(payload.content)
-  }
-}
-
-function showNotification(message: string) {
-  toast.add({
-    title: 'New message received',
-    description: message,
-  })
-}
-
 onUnmounted(() => {
   if (channel) {
     supabase.removeChannel(channel);
   }
-  // Clean up presence tracking
+  if (conversationChannel) {
+    supabase.removeChannel(conversationChannel);
+  }
   untrackPresence();
 });
 </script>

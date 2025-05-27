@@ -30,8 +30,10 @@ export const useConversationsStore = defineStore('conversations', () => {
     loadingConversations.value = true;
   
     const { data, error } = await supabase.rpc(
-      'get_current_user_conversations_with_last_message'
+      'get_own_conversations'
     );
+
+    console.log('data', data)
   
     if (error) {
       console.error('Error fetching conversations:', error);
