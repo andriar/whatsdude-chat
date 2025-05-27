@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { IMessage } from '~/types/inbox'
 import type { ISupabaseMessage } from '~/types/supabase';
 
-export const useMessagesStore = defineStore('messagesStore', () => {
+export const useMessagesStore = defineStore('messages', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser()
     // state

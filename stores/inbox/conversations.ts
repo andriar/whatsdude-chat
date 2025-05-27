@@ -3,7 +3,7 @@ import type { IConversation } from '~/types/inbox'
 import { useMessagesStore } from './messages';
 import { useConversationsParticipantsStore } from './conversations-participants';
 
-export const useConversationsStore = defineStore('conversationsStore', () => {
+export const useConversationsStore = defineStore('conversations', () => {
 
   const supabase = useSupabaseClient();
   const messagesStore = useMessagesStore();
