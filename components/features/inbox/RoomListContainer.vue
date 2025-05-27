@@ -1,7 +1,8 @@
 <template>
   <div class="flex-1 overflow-y-auto">
     <RoomItem v-for="conv in items" :key="conv.id" :conversation="conv"
-      :active="!!(activeConversation && activeConversation.id === conv.id)" @select="selectActiveConversation" />
+      :active="!!(activeConversation && activeConversation.id === conv.id)" @select="selectActiveConversation"
+      :is-online="true" />
   </div>
 </template>
 
@@ -20,6 +21,12 @@ const emit = defineEmits<{
 
 function selectActiveConversation(conv: IConversation) {
   emit('select', conv);
+}
+
+const onlineStatusStore = useOnlineStatusStore()
+
+function isOnline(userId: string) {
+  return onlineStatusStore.isUserOnline(userId)
 }
 </script>
 
