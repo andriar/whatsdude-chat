@@ -44,6 +44,7 @@ const authId = user.value?.id
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
 const { trackPresence, untrackPresence } = usePresence();
+const toast = useToast();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let channel: any = null;
@@ -87,26 +88,23 @@ onMounted(() => {
 function handleNewMessage(payload: ISupabaseMessage) {
   conversationsStore.updateLastMessage(payload.conversation_id, payload.content)
 
-  const isOpenedConversation = payload.conversation_id === conversationsStore.activeConversation.id
+  const isOpenedConversation = conversationsStore.activeConversation?.id === payload.conversation_id
   if (isOpenedConversation) {
     messageStore.addMessage(payload)
   }
 
   // show notification when the message is not from the user and the conversation is not the active conversation
-  if (payload.sender_id !== authId || !isOpenedConversation) {
-    showNotification(payload)
+  if (!isOpenedConversation) {
+    showNotification(payload.content)
   }
 }
 
-
-function showNotification(payload: ISupabaseMessage) {
-  const toast = useToast()
+function showNotification(message: string) {
   toast.add({
     title: 'New message received',
-    description: payload.content,
+    description: message,
   })
 }
-
 
 onUnmounted(() => {
   if (channel) {

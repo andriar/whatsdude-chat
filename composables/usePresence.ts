@@ -28,7 +28,6 @@ export const usePresence = () => {
       .on('presence', { event: 'sync' }, () => {
         const presenceState = channel.value?.presenceState()
         if (presenceState) {
-          console.log('sync', presenceState)
           onlineStatusStore.updatePresenceState(presenceState)
         }
       })
@@ -41,7 +40,6 @@ export const usePresence = () => {
         })
       })
       .on('presence', { event: 'leave' }, ({ leftPresences }: { leftPresences: PresencePayload[] }) => {
-        console.log('leftPresences', leftPresences)
         leftPresences.forEach((presence) => {
           onlineStatusStore.removeUser(presence.user_id)
         })

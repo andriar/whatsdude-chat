@@ -4,11 +4,11 @@ import type { ISupabaseMessage } from '~/types/supabase';
 
 export const useMessagesStore = defineStore('messagesStore', () => {
   const supabase = useSupabaseClient();
-  // state
+  const user = useSupabaseUser()
+    // state
   const messages = reactive<IMessage[]>([])
 
   // actions
-
   async function fetchMessages(conversationId: number) {
     const { data, error } = await supabase.from('messages').select('*').eq('conversation_id', conversationId)
     if (error) {
@@ -24,8 +24,6 @@ export const useMessagesStore = defineStore('messagesStore', () => {
   }
 
   async function addMessage(message: ISupabaseMessage) {
-    const user = useSupabaseUser()
-
     messages.push({
       id: message.id,
       from: message.sender_id !== user.value?.id ? 'them' : 'me',
