@@ -23,6 +23,7 @@
 <script lang="ts" setup>
 import type { ITab } from '@/types/inbox';
 import { onMounted, onUnmounted } from 'vue';
+import type { RealtimeChannel } from '#supabase/client';
 
 // import components
 import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue';
@@ -46,19 +47,18 @@ const messageStore = useMessagesStore();
 const { trackPresence, untrackPresence } = usePresence();
 const toast = useToast();
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let channel: any = null;
+let channel = null;
 
 channel = supabase
   .channel('messages-changes')
   .on(
     'postgres_changes',
     {
-      event: '*', // Listen to all events (INSERT, UPDATE, DELETE)
+      event: '*',
       schema: 'public',
       table: 'messages',
     },
-    (payload) => {
+    (payload: { eventType: 'INSERT' | 'UPDATE' | 'DELETE'; new: unknown; old: unknown }) => {
       // Handle new messages
       if (payload.eventType === 'INSERT') {
         handleNewMessage(payload.new as ISupabaseMessage)
