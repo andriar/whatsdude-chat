@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import type { IConversation } from '~/types/inbox'
 import { useMessagesStore } from './messages';
+import { useConversationsParticipantsStore } from './conversations-participants';
 
 export const useConversationsStore = defineStore('conversationsStore', () => {
 
@@ -38,24 +39,30 @@ export const useConversationsStore = defineStore('conversationsStore', () => {
       return;
     }
   
-    console.log('data', data);
-  
+    const participantsStore = useConversationsParticipantsStore();
+    if (data) {
+      const conversationIds = (data as IConversation[]).map(conv => conv.conversation_id);
+      await participantsStore.fetchParticipantsByConversationIds(conversationIds);
+    }
     if (!data) return;
   
     // Clear the existing conversations
     conversations.splice(0, conversations.length);
   
     // Populate the conversations array
-    (data as IConversation[]).forEach((conv: IConversation, idx: number) => {
+    (data as IConversation[]).forEach((conv: IConversation) => {
+      const participants = participantsStore.conversationParticipants.get(conv.conversation_id);
       conversations.push({
         id: Number(conv.conversation_id), // Convert to number to match IConversation type
-        name: 'user ' + ++idx,
-        avatar: 'https://latest-multichannel.qiscus.com/img/default_avatar.svg',
+        name: participants?.name || 'unknown user',
+        avatar: participants?.avatar || 'https://latest-multichannel.qiscus.com/img/default_avatar.svg',
+        sender_id: participants?.user_id,
         preview: conv.last_message,
         last_message: conv.last_message, // Add missing property
         last_message_time: conv.last_message_time, // Add missing property
         last_message_at: formatDateTime(conv.last_message_time),
         unread: 0,
+        
       });
     });
   

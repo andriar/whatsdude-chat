@@ -25,11 +25,12 @@ import type { ITab } from '@/types/inbox';
 import { onMounted, onUnmounted } from 'vue';
 
 // import components
-import ChatContainer from '@/components/features/inbox/chat/ChatContainer.vue';
-import RoomListContainer from '@/components/features/inbox/RoomListContainer.vue';
+import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue';
+import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue';
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import { useMessagesStore } from '~/stores/inbox/messages';
 import type { ISupabaseMessage } from '~/types/supabase';
+import { usePresence } from '~/composables/usePresence';
 
 definePageMeta({
   middleware: ['auth'],
@@ -42,6 +43,7 @@ const user = useSupabaseUser()
 const authId = user.value?.id
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
+const { trackPresence, untrackPresence } = usePresence();
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 let channel: any = null;
@@ -76,6 +78,10 @@ channel = supabase
 
 onMounted(() => {
   conversationsStore.fetchConversations();
+  // Start tracking presence when component mounts
+  if (authId) {
+    trackPresence(authId);
+  }
 });
 
 function handleNewMessage(payload: ISupabaseMessage) {
@@ -106,5 +112,7 @@ onUnmounted(() => {
   if (channel) {
     supabase.removeChannel(channel);
   }
+  // Clean up presence tracking
+  untrackPresence();
 });
 </script>
