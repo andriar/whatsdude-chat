@@ -22,11 +22,6 @@ export const useOnlineStatusStore = defineStore('onlineStatus', () => {
     return Array.from(onlineUsers.value.values())
   })
 
-  const getLastSeen = computed(() => (userId: string) => {
-    const user = onlineUsers.value.get(userId)
-    return user?.online_at || null
-  })
-
   // actions
   function updatePresenceState(presenceState: PresenceState) {
     onlineUsers.value.clear()
@@ -40,23 +35,9 @@ export const useOnlineStatusStore = defineStore('onlineStatus', () => {
   function addUser(user: OnlineUser) {
     onlineUsers.value.set(user.user_id, user)
   }
-
   function removeUser(userId: string) {
-    // Log the current state before removal
-    console.log('Current online users before removal:', Array.from(onlineUsers.value.entries()))
-    console.log('Attempting to remove user:', userId)
-
     if (onlineUsers.value.has(userId)) {
       onlineUsers.value.delete(userId)
-      // Verify the user was actually removed
-      const stillExists = onlineUsers.value.has(userId)
-      console.log('User removal successful?', !stillExists)
-      console.log('Remaining online users:', Array.from(onlineUsers.value.entries()))
-    } else {
-      console.log('User not found in online users map:', userId)
-      console.log('This could mean either:')
-      console.log('1. User was already removed by a previous sync')
-      console.log('2. User was never properly added to the map')
     }
   }
 
@@ -85,7 +66,6 @@ export const useOnlineStatusStore = defineStore('onlineStatus', () => {
     // getters
     isUserOnline,
     getOnlineUsers,
-    getLastSeen,
     // actions
     updatePresenceState,
     addUser,

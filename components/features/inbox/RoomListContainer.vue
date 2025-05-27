@@ -1,8 +1,8 @@
 <template>
   <div class="flex-1 overflow-y-auto">
     <RoomItem v-for="conv in items" :key="conv.id" :conversation="conv"
-      :active="!!(activeConversation && activeConversation.id === conv.id)" @select="selectActiveConversation"
-      :is-online="true" />
+      :active="!!(activeConversation && activeConversation.id === conv.id)"
+      :is-online="activeConversation ? isOnline(conv.sender_id) : false" @select="selectActiveConversation" />
   </div>
 </template>
 

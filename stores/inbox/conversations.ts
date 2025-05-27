@@ -56,6 +56,7 @@ export const useConversationsStore = defineStore('conversationsStore', () => {
         id: Number(conv.conversation_id), // Convert to number to match IConversation type
         name: participants?.name || 'unknown user',
         avatar: participants?.avatar || 'https://latest-multichannel.qiscus.com/img/default_avatar.svg',
+        sender_id: participants?.user_id,
         preview: conv.last_message,
         last_message: conv.last_message, // Add missing property
         last_message_time: conv.last_message_time, // Add missing property

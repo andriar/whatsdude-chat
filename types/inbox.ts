@@ -2,6 +2,7 @@ export interface IConversation {
   id: number
   name: string
   avatar: string
+  sender_id: string
   preview: string
   unread?: number
   last_message_at: string

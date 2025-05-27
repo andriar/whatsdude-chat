@@ -37,11 +37,10 @@ const props = defineProps<{
 }>();
 
 const onlineStatusStore = useOnlineStatusStore();
-const isOnline = computed(() => onlineStatusStore.isUserOnline(props.activeConversation.id.toString()));
-const lastSeen = computed(() => onlineStatusStore.getLastSeen(props.activeConversation.id.toString()));
+const isOnline = computed(() => onlineStatusStore.isUserOnline(props.activeConversation.sender_id.toString()));
 
 const statusText = computed(() => {
   if (isOnline.value) return 'Online'
-  return `Last seen ${onlineStatusStore.formatLastSeen(lastSeen.value)}`
+  return 'Offline'
 });
 </script>
