@@ -29,6 +29,7 @@ export const useMessagesStore = defineStore('messages', () => {
       from: message.sender_id !== user.value?.id ? 'them' : 'me',
       type: 'text', 
       text: message.content,
+      created_at: message.created_at,
     })
   }
                                                                     

@@ -9,6 +9,7 @@ export interface IConversation {
   conversation_id?: string
   last_message_time: string
   last_message: string
+  created_at: string
 }
 
 export interface IMessage {
@@ -19,6 +20,7 @@ export interface IMessage {
   duration?: string
   fileName?: string
   fileSize?: string
+  created_at: string
 }
 
 export interface ITab {
