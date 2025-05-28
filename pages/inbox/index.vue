@@ -5,8 +5,7 @@
       <section class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6">
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
-          <UButton icon="i-lucide-plus" size="sm" variant="ghost"
-            @click="createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b')" />
+          <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="createConversation" />
         </div>
         <UTabs :items="tabs" class="px-6 pb-4" />
         <RoomListContainer :items="conversationsStore.conversations"
@@ -21,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import type { ITab } from '@/types/inbox';
+import type { IConversation, ITab } from '@/types/inbox';
 import { onMounted, onUnmounted } from 'vue';
 import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue';
 import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue';
@@ -52,6 +51,18 @@ const supabase = useSupabaseClient();
 // Realtime subscriptions
 const channel = setupMessageSubscription();
 const conversationChannel = setupConversationSubscription();
+
+const createConversation = async () => {
+  const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b');
+
+  const newConversation: IConversation = {
+    ...conversation,
+    conversation_id: conversation?.id,
+    preview: conversation?.last_message || 'No messages yet',
+    unread: 0
+  }
+  conversationsStore.addConversation(newConversation);
+}
 
 // Lifecycle hooks
 onMounted(() => {

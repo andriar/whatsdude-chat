@@ -52,6 +52,8 @@ export function useConversationSubscriptions() {
     switch (payload.eventType) {
       case 'INSERT':
         console.log('New conversation:', payload.new as Conversation);
+
+        // handleNewConversation(payload.new as Conversation);
         break;
       case 'UPDATE':
         console.log('Updated conversation:', payload.new as Conversation);
@@ -61,6 +63,10 @@ export function useConversationSubscriptions() {
         break;
     }
   }
+  
+  // function handleNewConversation(payload: Conversation) {
+  //   conversationsStore.addConversation(payload);
+  // }
 
   function handleNewMessage(payload: Message) {
     conversationsStore.updateLastMessage(payload.conversation_id, payload.content);

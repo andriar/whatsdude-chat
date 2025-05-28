@@ -44,6 +44,8 @@ export function useConversationManagement() {
     }
 
     console.info('Success Create New conversation:', conversationData);
+
+    return conversationData;
   }
 
   return {

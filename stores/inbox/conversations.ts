@@ -7,6 +7,8 @@ export const useConversationsStore = defineStore('conversations', () => {
 
   const supabase = useSupabaseClient();
   const messagesStore = useMessagesStore();
+  const participantsStore = useConversationsParticipantsStore();
+
 
   // state
   const conversations = reactive<IConversation[]>([])
@@ -22,10 +24,16 @@ export const useConversationsStore = defineStore('conversations', () => {
     messagesStore.fetchMessages(conversation.id);
   }
 
-  function addConversation(conversation: IConversation) {
-    conversations.unshift(conversation)
+  async function addConversation(conversation: IConversation) {
+    await participantsStore.fetchParticipantsByConversationIds([conversation.conversation_id]);
+    const participants = participantsStore.conversationParticipants.get(Number(conversation.conversation_id));
+    if (!participants?.user_id) {
+      console.warn(`No user_id found for conversation ${conversation.conversation_id}`);
+      return;
+    }
+    const newConversation = createConversationObject(conversation, participants); 
+    conversations.unshift(newConversation);
   }
-
   async function fetchConversations() {
     loadingConversations.value = true;
   
@@ -33,43 +41,51 @@ export const useConversationsStore = defineStore('conversations', () => {
       'get_own_conversations'
     );
 
-    console.log('data', data)
-  
     if (error) {
       console.error('Error fetching conversations:', error);
       loadingConversations.value = false;
       return;
     }
   
-    const participantsStore = useConversationsParticipantsStore();
-    if (data) {
-      const conversationIds = (data as IConversation[]).map(conv => conv.conversation_id);
-      await participantsStore.fetchParticipantsByConversationIds(conversationIds);
-    }
     if (!data) return;
+
+    await populateConversations(data as IConversation[]);
   
+    if (conversations.length > 0) setActiveConversation(conversations[0]);
+    loadingConversations.value = false;
+  }
+
+  async function populateConversations(conversationData: IConversation[]) {
+    const conversationIds = conversationData.map(conv => conv.conversation_id);
+    await participantsStore.fetchParticipantsByConversationIds(conversationIds);
+
     // Clear the existing conversations
     conversations.splice(0, conversations.length);
   
     // Populate the conversations array
-    (data as IConversation[]).forEach((conv: IConversation) => {
+    conversationData.forEach((conv: IConversation) => {
       const participants = participantsStore.conversationParticipants.get(conv.conversation_id);
-      conversations.push({
-        id: Number(conv.conversation_id), // Convert to number to match IConversation type
-        name: participants?.name || 'unknown user',
-        avatar: participants?.avatar || 'https://latest-multichannel.qiscus.com/img/default_avatar.svg',
-        sender_id: participants?.user_id,
-        preview: conv.last_message,
-        last_message: conv.last_message, // Add missing property
-        last_message_time: conv.last_message_time, // Add missing property
-        last_message_at: formatDateTime(conv.last_message_time),
-        unread: 0,
-        
-      });
+      if (!participants?.user_id) {
+        console.warn(`No user_id found for conversation ${conv.conversation_id}`);
+        return;
+      }
+
+      conversations.push(createConversationObject(conv, participants));
     });
-  
-    if (conversations.length > 0) setActiveConversation(conversations[0]);
-    loadingConversations.value = false;
+  }
+
+  function createConversationObject(conv: IConversation, participants: { name: string; avatar: string; user_id: string }) {
+    return {
+      id: Number(conv.conversation_id),
+      name: participants?.name || 'unknown user',
+      avatar: participants?.avatar || 'https://latest-multichannel.qiscus.com/img/default_avatar.svg',
+      sender_id: participants?.user_id,
+      preview: conv.last_message || 'No messages yet',
+      last_message: conv.last_message || 'No messages yet',
+      last_message_time: conv.last_message_time,
+      last_message_at: formatDateTime(conv.last_message_time),
+      unread: 0,
+    };
   }
 
   async function updateLastMessage(conversationId: number, lastMessage: string) {
