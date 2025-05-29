@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import type { IMessage } from '~/types/inbox'
 import type { ISupabaseMessage } from '~/types/supabase';
 
-export const useMessagesStore = defineStore('messagesStore', () => {
+export const useMessagesStore = defineStore('messages', () => {
   const supabase = useSupabaseClient();
   const user = useSupabaseUser()
     // state
@@ -29,6 +29,7 @@ export const useMessagesStore = defineStore('messagesStore', () => {
       from: message.sender_id !== user.value?.id ? 'them' : 'me',
       type: 'text', 
       text: message.content,
+      created_at: message.created_at,
     })
   }
                                                                     

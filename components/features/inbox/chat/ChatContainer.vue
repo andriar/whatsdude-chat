@@ -27,7 +27,6 @@ const props = defineProps<{
 const sendMessage = async (message: string) => {
   if (!props.activeConversation?.id || !useSupabaseUser().value?.id) return;
 
-  console.log('Sending message:', message);
   const supabase = useSupabaseClient();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

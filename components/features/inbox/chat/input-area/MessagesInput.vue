@@ -37,8 +37,6 @@ const clearMessage = () => {
 
 const sendMessage = () => {
   if (message.value.trim()) {
-    console.log('Sending message:', message.value);
-
     emit('send', message.value);
 
     // Clear message after sending
