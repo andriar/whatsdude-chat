@@ -1,11 +1,16 @@
 <script setup>
 import { useProfileStore } from '../stores/profile'
 
+definePageMeta({
+  middleware: ['profile']
+})
+
 const name = ref('')
 const avatar = ref(null)
 const loading = ref(false)
 const previewUrl = ref('')
 const avatarLoading = ref(false)
+const profileStore = useProfileStore()
 
 // File validation constants
 const MAX_FILE_SIZE = 5 * 1024 * 1024 // 5MB
@@ -156,7 +161,6 @@ async function onSubmit() {
     if (error) throw error
 
     // Update profile store
-    const profileStore = useProfileStore()
     await profileStore.fetchProfile()
 
     const toast = useToast()
@@ -188,6 +192,12 @@ async function onSubmit() {
     loading.value = false
   }
 }
+
+onMounted(async () => {
+  if (profileStore.profile) {
+    await navigateTo('/inbox', { replace: true })
+  }
+})
 </script>
 
 <template>

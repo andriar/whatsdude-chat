@@ -13,12 +13,8 @@ export const useProfileStore = defineStore('profile', () => {
   const profile = ref<UserProfile | null>(null)
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const lastFetchTime = ref<number>(0)
-  const CACHE_DURATION = 5 * 60 * 1000 // 5 minutes in milliseconds
-  const MAX_RETRIES = 3
-  const RETRY_DELAY = 1000 // 1 second
 
-  const fetchProfile = async (retryCount = 0) => {
+  const fetchProfile = async () => {
     const user = useSupabaseUser()
     const supabase = useSupabaseClient()
 
@@ -27,15 +23,7 @@ export const useProfileStore = defineStore('profile', () => {
       return
     }
 
-    // Check cache
-    const now = Date.now()
-    if (profile.value?.user_id === user.value.id && now - lastFetchTime.value < CACHE_DURATION) {
-      return
-    }
-
     loading.value = true
-    error.value = null
-
     try {
       const { data, error: fetchError } = await supabase
         .from('user_profiles')
@@ -43,19 +31,13 @@ export const useProfileStore = defineStore('profile', () => {
         .eq('user_id', user.value.id)
         .single()
 
-      if (fetchError) throw fetchError
-
-      profile.value = data
-      lastFetchTime.value = now
-    } catch (e: unknown) {
+      if (fetchError) {
+        error.value = fetchError.message
+      } else {
+        profile.value = data
+      } 
+    } catch (e) {
       error.value = e instanceof Error ? e.message : 'An unknown error occurred'
-      console.error('Error fetching profile:', e)
-
-      // Retry logic
-      if (retryCount < MAX_RETRIES) {
-        await new Promise(resolve => setTimeout(resolve, RETRY_DELAY * (retryCount + 1)))
-        return fetchProfile(retryCount + 1)
-      }
     } finally {
       loading.value = false
     }
@@ -83,7 +65,6 @@ export const useProfileStore = defineStore('profile', () => {
       if (updateError) throw updateError
 
       profile.value = data
-      lastFetchTime.value = Date.now()
     } catch (e: unknown) {
       error.value = e instanceof Error ? e.message : 'An unknown error occurred'
       console.error('Error updating profile:', e)
@@ -96,7 +77,6 @@ export const useProfileStore = defineStore('profile', () => {
   const clearProfile = () => {
     profile.value = null
     error.value = null
-    lastFetchTime.value = 0
   }
 
   // Watch for user changes and fetch profile

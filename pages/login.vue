@@ -1,6 +1,6 @@
 <script setup>
-const email = ref('user@mail.com')
-const password = ref('password')
+const email = ref('andriar.fazzan@gmail.com')
+const password = ref('12345678')
 const loading = ref(false)
 
 async function onSubmit() {

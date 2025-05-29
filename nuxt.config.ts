@@ -31,9 +31,11 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
-
-  // Add global middleware
-  router: {
-    middleware: ['auth']
-  }
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/signup', '/login'],
+    },
+  },
 });

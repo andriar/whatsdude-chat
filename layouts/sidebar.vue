@@ -1,6 +1,7 @@
 <template>
   <UApp>
     <div class="flex h-screen w-screen">
+      <LoadingScreen :isLoading="profileStore.loading" :context="loadingContext" />
       <!-- Sidebar -->
       <aside class="w-64 bg-white flex flex-col p-8 pt-8 pb-4 rounded-l-3xl shadow-md">
         <div class="flex items-center mb-8">
@@ -22,6 +23,8 @@
 
 <script lang="ts" setup>
 import { useConversationsStore } from '~/stores/inbox/conversations';
+import LoadingScreen from '~/components/LoadingScreen.vue';
+
 
 const navItems = ref([
   [
@@ -67,6 +70,8 @@ const navItems = ref([
   ]
 ])
 
+const loadingContext = ref('Loading profile...')
+
 
 // Composables
 const user = useSupabaseUser();
@@ -76,12 +81,14 @@ const supabase = useSupabaseClient();
 const { setupMessageSubscription } = useConversationSubscriptions();
 const channel = setupMessageSubscription();
 const conversationsStore = useConversationsStore();
+const profileStore = useProfileStore()
+
 
 
 // Lifecycle hooks
-onMounted(() => {
-  conversationsStore.fetchConversations();
+onMounted(async () => {
   if (authId) {
+    conversationsStore.fetchConversations();
     trackPresence(authId);
   }
 });
