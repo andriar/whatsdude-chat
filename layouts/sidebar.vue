@@ -32,6 +32,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useConversationsStore } from '~/stores/inbox/conversations';
+
 const navItems = ref([
   [
     {
@@ -82,4 +84,29 @@ const projects = [
   { name: 'Unicorn app', color: 'bg-pink-400', count: 3 },
   { name: 'Salt', color: 'bg-green-400', count: 1 },
 ];
+
+// Composables
+const user = useSupabaseUser();
+const authId = user.value?.id;
+const { trackPresence, untrackPresence } = usePresence();
+const supabase = useSupabaseClient();
+const { setupMessageSubscription } = useConversationSubscriptions();
+const channel = setupMessageSubscription();
+const conversationsStore = useConversationsStore();
+
+
+// Lifecycle hooks
+onMounted(() => {
+  conversationsStore.fetchConversations();
+  if (authId) {
+    trackPresence(authId);
+  }
+});
+
+onUnmounted(() => {
+  if (channel) {
+    supabase.removeChannel(channel);
+  }
+  untrackPresence();
+});
 </script>

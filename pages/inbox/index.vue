@@ -21,13 +21,10 @@
 
 <script lang="ts" setup>
 import type { IConversation, ITab } from '@/types/inbox';
-import { onMounted, onUnmounted } from 'vue';
 import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue';
 import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue';
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import { useMessagesStore } from '~/stores/inbox/messages';
-import { usePresence } from '~/composables/usePresence';
-import { useConversationSubscriptions } from '~/composables/useConversationSubscriptions';
 import { useConversationManagement } from '~/composables/useConversationManagement';
 
 definePageMeta({
@@ -39,47 +36,24 @@ definePageMeta({
 const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }];
 
 // Composables
-const user = useSupabaseUser();
-const authId = user.value?.id;
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
-const { trackPresence, untrackPresence } = usePresence();
-const { setupMessageSubscription } = useConversationSubscriptions();
 const { createNewConversation } = useConversationManagement();
-const supabase = useSupabaseClient();
 
-// Realtime subscriptions
-const channel = setupMessageSubscription();
 
 const createConversation = async () => {
   const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b');
 
-  const newConversation: IConversation = {
+  const data: IConversation = {
     ...conversation,
     conversation_id: conversation?.id,
     preview: conversation?.last_message || 'No messages yet',
     unread: 0
   }
-  const conversation22 = await conversationsStore.addConversation(newConversation);
+  const newConversation = await conversationsStore.addConversation(data);
 
-  conversationsStore.setActiveConversation(conversation22);
+  conversationsStore.setActiveConversation(newConversation);
 }
 
-// Lifecycle hooks
-onMounted(() => {
-  conversationsStore.fetchConversations();
-  if (authId) {
-    trackPresence(authId);
-  }
-});
 
-onUnmounted(() => {
-  if (channel) {
-    supabase.removeChannel(channel);
-  }
-  if (conversationChannel) {
-    supabase.removeChannel(conversationChannel);
-  }
-  untrackPresence();
-});
 </script>
