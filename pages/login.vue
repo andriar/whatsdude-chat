@@ -1,6 +1,6 @@
 <script setup>
-const email = ref('user@mail.com')
-const password = ref('password')
+const email = ref('andriar.fazzan@gmail.com')
+const password = ref('12345678')
 const loading = ref(false)
 
 async function onSubmit() {
@@ -22,7 +22,17 @@ async function onSubmit() {
       })
       return
     }
-    navigateTo('/inbox')
+
+    // Fetch user profile after successful login
+    const profileStore = useProfileStore()
+    await profileStore.fetchProfile()
+
+    // Navigate based on profile existence
+    if (!profileStore.profile) {
+      navigateTo('/profile-setup')
+    } else {
+      navigateTo('/inbox')
+    }
   } catch (error) {
     console.error('Login failed:', error)
   } finally {
@@ -49,6 +59,13 @@ async function onSubmit() {
           <UButton type="submit" color="primary" block :loading="loading">
             Login
           </UButton>
+        </div>
+
+        <div class="mt-4 text-center text-sm text-gray-600">
+          Don't have an account?
+          <NuxtLink to="/signup" class="text-primary-600 hover:text-primary-500">
+            Sign up here
+          </NuxtLink>
         </div>
       </UForm>
     </UCard>

@@ -31,8 +31,11 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: 'page', mode: 'out-in' },
   },
-
-  routeRules: {
-    '/': { redirect: '/login' }
+  supabase: {
+    redirectOptions: {
+      login: '/login',
+      callback: '/confirm',
+      exclude: ['/signup', '/login'],
+    },
   },
 });
