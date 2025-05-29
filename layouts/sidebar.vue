@@ -10,7 +10,10 @@
         </div>
 
         <nav class="flex-1">
-          <UNavigationMenu :items="navItems" orientation="vertical" class="data-[orientation=vertical]:w-48" />
+          <UNavigationMenu
+            :items="navItems"
+            orientation="vertical"
+            class="data-[orientation=vertical]:w-48" />
         </nav>
       </aside>
 
@@ -24,7 +27,6 @@
 <script lang="ts" setup>
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import LoadingScreen from '~/components/LoadingScreen.vue';
-
 
 const navItems = ref([
   [
@@ -45,13 +47,13 @@ const navItems = ref([
       icon: 'i-lucide-log-out',
       description: 'Logout.',
       onSelect: async () => {
-        const { error } = await useSupabaseClient().auth.signOut()
+        const { error } = await useSupabaseClient().auth.signOut();
         if (error) {
-          console.error('Error signing out:', error)
+          console.error('Error signing out:', error);
         } else {
-          navigateTo('/login')
+          navigateTo('/login');
         }
-      }
+      },
     },
   ],
   [
@@ -60,18 +62,17 @@ const navItems = ref([
       icon: 'i-simple-icons-github',
       badge: '3.8k',
       to: 'https://github.com/nuxt/ui',
-      target: '_blank'
+      target: '_blank',
     },
     {
       label: 'Help',
       icon: 'i-lucide-circle-help',
-      disabled: true
-    }
-  ]
-])
+      disabled: true,
+    },
+  ],
+]);
 
-const loadingContext = ref('Loading profile...')
-
+const loadingContext = ref('Loading profile...');
 
 // Composables
 const user = useSupabaseUser();
@@ -81,9 +82,7 @@ const supabase = useSupabaseClient();
 const { setupMessageSubscription } = useConversationSubscriptions();
 const channel = setupMessageSubscription();
 const conversationsStore = useConversationsStore();
-const profileStore = useProfileStore()
-
-
+const profileStore = useProfileStore();
 
 // Lifecycle hooks
 onMounted(async () => {

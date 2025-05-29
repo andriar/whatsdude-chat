@@ -1,20 +1,20 @@
-import { useProfileStore } from '~/stores/profile'
+import { useProfileStore } from '~/stores/profile';
 
-export default defineNuxtRouteMiddleware(async (to) => {
-  const profileStore = useProfileStore()
+export default defineNuxtRouteMiddleware(async to => {
+  const profileStore = useProfileStore();
 
   // Skip middleware for login and profile-setup routes
   if (to.path === '/login' || to.path === '/profile-setup') {
-    return
+    return;
   }
 
   if (profileStore.profile) {
-    return
+    return;
   }
 
-  await profileStore.fetchProfile()
+  await profileStore.fetchProfile();
 
   if (!profileStore.profile) {
-    return navigateTo('/profile-setup')
+    return navigateTo('/profile-setup');
   }
-}) 
+});

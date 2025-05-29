@@ -1,5 +1,7 @@
 <template>
-  <section v-if="activeConversation" class="flex-1 bg-white rounded-2xl shadow-md flex flex-col overflow-hidden">
+  <section
+    v-if="activeConversation"
+    class="flex-1 bg-white rounded-2xl shadow-md flex flex-col overflow-hidden">
     <!-- Header Chat Section -->
     <HeaderBar :active-conversation="activeConversation" />
 
@@ -36,9 +38,7 @@ const sendMessage = async (message: string) => {
     sender_id: useSupabaseUser().value?.id || '',
   };
 
-  const { data: _data, error: _error } = await supabase
-    .from('messages')
-    .insert(newMessage);
+  const { data: _data, error: _error } = await supabase.from('messages').insert(newMessage);
 };
 </script>
 

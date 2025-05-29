@@ -1,8 +1,7 @@
 <template>
   <div class="flex gap-2">
     <UButton
-      class="bg-primary antialiased text-white px-4 py-1 rounded-full text-xs font-semibold flex items-center justify-center"
-    >
+      class="bg-primary antialiased text-white px-4 py-1 rounded-full text-xs font-semibold flex items-center justify-center">
       Resolved
     </UButton>
 
@@ -12,8 +11,7 @@
         leadingIcon: '!w-6 !h-6 ',
       }"
       class="text-black-900 p-0"
-      variant="ghost"
-    />
+      variant="ghost" />
   </div>
 </template>
 

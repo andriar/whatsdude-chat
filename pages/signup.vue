@@ -9,15 +9,21 @@
         <div class="flex flex-col gap-4">
           <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
 
-          <UInput v-model="password" type="password" placeholder="Enter your password" class="w-full" />
+          <UInput
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            class="w-full" />
 
-          <UInput v-model="confirmPassword" type="password" placeholder="Confirm your password" class="w-full" />
+          <UInput
+            v-model="confirmPassword"
+            type="password"
+            placeholder="Confirm your password"
+            class="w-full" />
         </div>
 
         <div class="mt-4">
-          <UButton type="submit" color="primary" block :loading="loading">
-            Sign Up
-          </UButton>
+          <UButton type="submit" color="primary" block :loading="loading">Sign Up</UButton>
         </div>
 
         <div class="mt-4 text-center text-sm text-gray-600">
@@ -32,57 +38,57 @@
 </template>
 
 <script setup>
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
-const loading = ref(false)
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const loading = ref(false);
 
 async function onSubmit() {
   if (password.value !== confirmPassword.value) {
-    const toast = useToast()
+    const toast = useToast();
     toast.add({
       title: 'Validation Error',
       description: 'Passwords do not match',
       color: 'red',
       icon: 'i-lucide-alert-circle',
-      timeout: 5000
-    })
-    return
+      timeout: 5000,
+    });
+    return;
   }
 
-  loading.value = true
+  loading.value = true;
   try {
     const { error } = await useSupabaseClient().auth.signUp({
       email: email.value,
-      password: password.value
-    })
+      password: password.value,
+    });
 
     if (error) {
-      const toast = useToast()
+      const toast = useToast();
       toast.add({
         title: 'Signup Failed',
         description: error.message || 'There was a problem with your request.',
         color: 'red',
         icon: 'i-lucide-alert-circle',
-        timeout: 5000
-      })
-      return
+        timeout: 5000,
+      });
+      return;
     }
 
-    const toast = useToast()
+    const toast = useToast();
     toast.add({
       title: 'Success',
       description: 'Please check your email to verify your account.',
       color: 'green',
       icon: 'i-lucide-check-circle',
-      timeout: 5000
-    })
+      timeout: 5000,
+    });
 
-    navigateTo('/login')
+    navigateTo('/login');
   } catch (error) {
-    console.error('Signup failed:', error)
+    console.error('Signup failed:', error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>

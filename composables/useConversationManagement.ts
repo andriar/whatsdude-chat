@@ -34,7 +34,7 @@ export function useConversationManagement() {
 
     const participants: ConversationParticipant[] = [
       { conversation_id: conversationData.id, user_id: authId },
-      { conversation_id: conversationData.id, user_id: targetUserId }
+      { conversation_id: conversationData.id, user_id: targetUserId },
     ];
 
     for (const participant of participants) {
@@ -51,4 +51,4 @@ export function useConversationManagement() {
   return {
     createNewConversation,
   };
-} 
+}
