@@ -1,58 +1,58 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
 
 interface UserProfile {
-  id: string
-  user_id: string
-  name: string
-  avatar_url: string | null
-  updated_at: string
-  created_at: string
+  id: string;
+  user_id: string;
+  name: string;
+  avatar_url: string | null;
+  updated_at: string;
+  created_at: string;
 }
 
 export const useProfileStore = defineStore('profile', () => {
-  const profile = ref<UserProfile | null>(null)
-  const loading = ref(false)
-  const error = ref<string | null>(null)
+  const profile = ref<UserProfile | null>(null);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
 
   const fetchProfile = async () => {
-    const user = useSupabaseUser()
-    const supabase = useSupabaseClient()
+    const user = useSupabaseUser();
+    const supabase = useSupabaseClient();
 
     if (!user.value) {
-      profile.value = null
-      return
+      profile.value = null;
+      return;
     }
 
-    loading.value = true
+    loading.value = true;
     try {
       const { data, error: fetchError } = await supabase
         .from('user_profiles')
         .select('*')
         .eq('user_id', user.value.id)
-        .single()
+        .single();
 
       if (fetchError) {
-        error.value = fetchError.message
+        error.value = fetchError.message;
       } else {
-        profile.value = data
-      } 
+        profile.value = data;
+      }
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'An unknown error occurred'
+      error.value = e instanceof Error ? e.message : 'An unknown error occurred';
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   const updateProfile = async (updates: Partial<UserProfile>) => {
-    const user = useSupabaseUser()
-    const supabase = useSupabaseClient()
+    const user = useSupabaseUser();
+    const supabase = useSupabaseClient();
 
     if (!user.value || !profile.value) {
-      throw new Error('No user or profile found')
+      throw new Error('No user or profile found');
     }
 
-    loading.value = true
-    error.value = null
+    loading.value = true;
+    error.value = null;
 
     try {
       const { data, error: updateError } = await supabase
@@ -60,33 +60,37 @@ export const useProfileStore = defineStore('profile', () => {
         .update(updates)
         .eq('user_id', user.value.id)
         .select()
-        .single()
+        .single();
 
-      if (updateError) throw updateError
+      if (updateError) throw updateError;
 
-      profile.value = data
+      profile.value = data;
     } catch (e: unknown) {
-      error.value = e instanceof Error ? e.message : 'An unknown error occurred'
-      console.error('Error updating profile:', e)
-      throw e
+      error.value = e instanceof Error ? e.message : 'An unknown error occurred';
+      console.error('Error updating profile:', e);
+      throw e;
     } finally {
-      loading.value = false
+      loading.value = false;
     }
-  }
+  };
 
   const clearProfile = () => {
-    profile.value = null
-    error.value = null
-  }
+    profile.value = null;
+    error.value = null;
+  };
 
   // Watch for user changes and fetch profile
-  watch(() => useSupabaseUser().value, (newUser) => {
-    if (newUser) {
-      fetchProfile()
-    } else {
-      clearProfile()
-    }
-  }, { immediate: true })
+  watch(
+    () => useSupabaseUser().value,
+    newUser => {
+      if (newUser) {
+        fetchProfile();
+      } else {
+        clearProfile();
+      }
+    },
+    { immediate: true }
+  );
 
   return {
     profile,
@@ -94,6 +98,6 @@ export const useProfileStore = defineStore('profile', () => {
     error,
     fetchProfile,
     updateProfile,
-    clearProfile
-  }
-}) 
+    clearProfile,
+  };
+});

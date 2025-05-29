@@ -8,24 +8,27 @@
 </template>
 
 <script setup lang="ts">
-const client = useSupabaseClient()
-const router = useRouter()
+const client = useSupabaseClient();
+const router = useRouter();
 
 onMounted(async () => {
   try {
     // Get the session from the URL hash
-    const { data: { session }, error } = await client.auth.getSession()
+    const {
+      data: { session },
+      error,
+    } = await client.auth.getSession();
 
-    if (error) throw error
+    if (error) throw error;
 
     if (session) {
       // If we have a session, redirect to the home page
-      router.push('/')
+      router.push('/');
     }
   } catch (error) {
-    console.error('Error during authentication:', error)
+    console.error('Error during authentication:', error);
     // Redirect to login page if there's an error
-    router.push('/login')
+    router.push('/login');
   }
-})
+});
 </script>

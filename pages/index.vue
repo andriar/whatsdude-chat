@@ -1,17 +1,17 @@
 <script setup>
-const email = ref('')
-const password = ref('')
-const loading = ref(false)
+const email = ref('');
+const password = ref('');
+const loading = ref(false);
 
 async function onSubmit() {
-  loading.value = true
+  loading.value = true;
   try {
     // Add your login logic here
-    await new Promise(resolve => setTimeout(resolve, 1000)) // Simulated API call
+    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
   } catch (error) {
-    console.error('Login failed:', error)
+    console.error('Login failed:', error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
@@ -24,16 +24,18 @@ async function onSubmit() {
       </template>
 
       <UForm :state="{ email, password }" @submit="onSubmit">
-        <div class="flex flex-col gap-4 ">
+        <div class="flex flex-col gap-4">
           <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
 
-          <UInput v-model="password" type="password" placeholder="Enter your password" class="w-full" />
+          <UInput
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            class="w-full" />
         </div>
 
         <div class="mt-4">
-          <UButton type="submit" color="primary" block :loading="loading">
-            Login
-          </UButton>
+          <UButton type="submit" color="primary" block :loading="loading">Login</UButton>
         </div>
       </UForm>
     </UCard>

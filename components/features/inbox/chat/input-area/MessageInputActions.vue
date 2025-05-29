@@ -12,8 +12,7 @@
         }"
         size="sm"
         variant="ghost"
-        @click="action.handler"
-      />
+        @click="action.handler" />
     </div>
 
     <!-- Send Button -->
@@ -26,8 +25,7 @@
       size="sm"
       variant="ghost"
       icon="i-lucide-send"
-      @click="sendMessage"
-    />
+      @click="sendMessage" />
   </div>
 </template>
 

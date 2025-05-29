@@ -4,10 +4,13 @@
       <!-- Avatar -->
       <div class="relative">
         <UAvatar :src="activeConversation.avatar" class="w-10 h-10" />
-        <div class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white" :class="{
-          'bg-green-500': isOnline,
-          'bg-gray-300': !isOnline
-        }" />
+        <div
+          class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white"
+          :class="{
+            'bg-green-500': isOnline,
+            'bg-gray-300': !isOnline,
+          }"
+        />
       </div>
 
       <!-- Name and Status -->
@@ -27,20 +30,22 @@
 </template>
 
 <script setup lang="ts">
-import type { IConversation } from '~/types/inbox';
-import HeaderActionButton from './HeaderActionButton.vue';
-import { useOnlineStatusStore } from '~/stores/onlineStatus';
-import { computed } from 'vue';
+  import type { IConversation } from '~/types/inbox'
+  import HeaderActionButton from './HeaderActionButton.vue'
+  import { useOnlineStatusStore } from '~/stores/online-status'
+  import { computed } from 'vue'
 
-const props = defineProps<{
-  activeConversation: IConversation;
-}>();
+  const props = defineProps<{
+    activeConversation: IConversation
+  }>()
 
-const onlineStatusStore = useOnlineStatusStore();
-const isOnline = computed(() => onlineStatusStore.isUserOnline(props.activeConversation.sender_id.toString()));
+  const onlineStatusStore = useOnlineStatusStore()
+  const isOnline = computed(() =>
+    onlineStatusStore.isUserOnline(props.activeConversation.sender_id.toString())
+  )
 
-const statusText = computed(() => {
-  if (isOnline.value) return 'Online'
-  return 'Offline'
-});
+  const statusText = computed(() => {
+    if (isOnline.value) return 'Online'
+    return 'Offline'
+  })
 </script>

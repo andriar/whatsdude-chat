@@ -35,7 +35,11 @@ export function useConversationSubscriptions() {
       .subscribe();
   }
 
-  function handleMessageChange(payload: { eventType: 'INSERT' | 'UPDATE' | 'DELETE'; new: unknown; old: unknown }) {
+  function handleMessageChange(payload: {
+    eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+    new: unknown;
+    old: unknown;
+  }) {
     switch (payload.eventType) {
       case 'INSERT':
         handleNewMessage(payload.new as Message);
@@ -49,7 +53,11 @@ export function useConversationSubscriptions() {
     }
   }
 
-  function handleConversationChange(payload: { eventType: 'INSERT' | 'UPDATE' | 'DELETE'; new: unknown; old: unknown }) {
+  function handleConversationChange(payload: {
+    eventType: 'INSERT' | 'UPDATE' | 'DELETE';
+    new: unknown;
+    old: unknown;
+  }) {
     switch (payload.eventType) {
       case 'INSERT':
         console.log('New conversation:', payload.new as Conversation);
@@ -64,7 +72,7 @@ export function useConversationSubscriptions() {
         break;
     }
   }
-  
+
   // function handleNewConversation(payload: Conversation) {
   //   conversationsStore.addConversation(payload);
   // }
@@ -72,7 +80,9 @@ export function useConversationSubscriptions() {
   // add queue for new conversation
   // if new conversation to many, then add to queue
   async function handleNewMessage(payload: Message) {
-    const index = conversationsStore.conversations.findIndex((conv: IConversation) => conv.id === payload.conversation_id);
+    const index = conversationsStore.conversations.findIndex(
+      (conv: IConversation) => conv.id === payload.conversation_id
+    );
     if (index === -1) {
       const conv = await conversationsStore.fetchConversationById(payload.conversation_id);
 
@@ -84,13 +94,13 @@ export function useConversationSubscriptions() {
         last_message_at: conv?.last_message_at,
         last_message_time: conv?.last_message_time,
         last_message: conv?.last_message,
-      }
+      };
       return await conversationsStore.addConversation(newConversation as IConversation);
-
     }
     conversationsStore.updateLastMessage(index, payload.content);
 
-    const isOpenedConversation = conversationsStore.activeConversation?.id === payload.conversation_id;
+    const isOpenedConversation =
+      conversationsStore.activeConversation?.id === payload.conversation_id;
     if (isOpenedConversation) {
       messageStore.addMessage(payload);
     } else {
@@ -109,4 +119,4 @@ export function useConversationSubscriptions() {
     setupMessageSubscription,
     setupConversationSubscription,
   };
-} 
+}

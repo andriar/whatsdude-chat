@@ -1,1 +1,1 @@
-declare module 'pinia'
+declare module 'pinia';

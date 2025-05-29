@@ -1,42 +1,42 @@
 <script setup>
-const email = ref('andriar.fazzan@gmail.com')
-const password = ref('12345678')
-const loading = ref(false)
+const email = ref('andriar.fazzan@gmail.com');
+const password = ref('12345678');
+const loading = ref(false);
 
 async function onSubmit() {
-  loading.value = true
+  loading.value = true;
   try {
     const { error } = await useSupabaseClient().auth.signInWithPassword({
       email: email.value,
-      password: password.value
-    })
+      password: password.value,
+    });
 
     if (error) {
-      const toast = useToast()
+      const toast = useToast();
       toast.add({
         title: 'Login Failed',
         description: error.message || 'There was a problem with your request.',
         color: 'red',
         icon: 'i-lucide-alert-circle',
-        timeout: 5000
-      })
-      return
+        timeout: 5000,
+      });
+      return;
     }
 
     // Fetch user profile after successful login
-    const profileStore = useProfileStore()
-    await profileStore.fetchProfile()
+    const profileStore = useProfileStore();
+    await profileStore.fetchProfile();
 
     // Navigate based on profile existence
     if (!profileStore.profile) {
-      navigateTo('/profile-setup')
+      navigateTo('/profile-setup');
     } else {
-      navigateTo('/inbox')
+      navigateTo('/inbox');
     }
   } catch (error) {
-    console.error('Login failed:', error)
+    console.error('Login failed:', error);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
 }
 </script>
@@ -49,16 +49,18 @@ async function onSubmit() {
       </template>
 
       <UForm :state="{ email, password }" @submit.prevent="onSubmit">
-        <div class="flex flex-col gap-4 ">
+        <div class="flex flex-col gap-4">
           <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
 
-          <UInput v-model="password" type="password" placeholder="Enter your password" class="w-full" />
+          <UInput
+            v-model="password"
+            type="password"
+            placeholder="Enter your password"
+            class="w-full" />
         </div>
 
         <div class="mt-4">
-          <UButton type="submit" color="primary" block :loading="loading">
-            Login
-          </UButton>
+          <UButton type="submit" color="primary" block :loading="loading">Login</UButton>
         </div>
 
         <div class="mt-4 text-center text-sm text-gray-600">

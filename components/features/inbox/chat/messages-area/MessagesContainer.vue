@@ -1,14 +1,10 @@
 <template>
-  <div
-    ref="chatContainer"
-    class="flex-1 p-6 overflow-y-auto flex flex-col gap-y-1"
-  >
+  <div ref="chatContainer" class="flex-1 p-6 overflow-y-auto flex flex-col gap-y-1">
     <MessageItem
       v-for="(message, index) in messages"
       :key="message.id"
       :message="message"
-      :previous-message="getPreviousMessage(index)"
-    />
+      :previous-message="getPreviousMessage(index)" />
   </div>
 </template>
 
