@@ -11,17 +11,6 @@
         <nav class="flex-1">
           <UNavigationMenu :items="navItems" orientation="vertical" class="data-[orientation=vertical]:w-48" />
         </nav>
-        <div class="mt-8">
-          <div class="text-xs text-gray-400 mb-2">PROJECTS</div>
-          <div class="mb-2">
-            <div v-for="project in projects" :key="project.name" class="flex items-center mb-1 text-sm">
-              <span :class="project.color" class="w-2 h-2 rounded-full mr-2 inline-block" />
-              <span>{{ project.name }}</span>
-              <span v-if="project.count" class="ml-auto text-xs text-gray-400">+{{ project.count }}</span>
-            </div>
-          </div>
-          <UButton size="sm" variant="ghost">Show more</UButton>
-        </div>
       </aside>
 
       <div class="w-full">
@@ -78,12 +67,6 @@ const navItems = ref([
   ]
 ])
 
-const projects = [
-  { name: 'Callipso', color: 'bg-purple-500' },
-  { name: 'BWS bank', color: 'bg-blue-500', count: 5 },
-  { name: 'Unicorn app', color: 'bg-pink-400', count: 3 },
-  { name: 'Salt', color: 'bg-green-400', count: 1 },
-];
 
 // Composables
 const user = useSupabaseUser();

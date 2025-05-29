@@ -28,7 +28,6 @@ import { useMessagesStore } from '~/stores/inbox/messages';
 import { useConversationManagement } from '~/composables/useConversationManagement';
 
 definePageMeta({
-  middleware: ['auth'],
   layout: 'sidebar',
 });
 
