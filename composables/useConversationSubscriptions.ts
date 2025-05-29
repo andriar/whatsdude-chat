@@ -2,6 +2,7 @@ import { useSupabaseClient, useToast } from '#imports';
 import type { Database } from '~/types/database.types';
 import { useConversationsStore } from '~/stores/inbox/conversations';
 import { useMessagesStore } from '~/stores/inbox/messages';
+import type { IConversation } from '~/types/inbox';
 
 type Message = Database['public']['Tables']['messages']['Row'];
 type Conversation = Database['public']['Tables']['conversations']['Row'];
@@ -68,8 +69,26 @@ export function useConversationSubscriptions() {
   //   conversationsStore.addConversation(payload);
   // }
 
-  function handleNewMessage(payload: Message) {
-    conversationsStore.updateLastMessage(payload.conversation_id, payload.content);
+  // add queue for new conversation
+  // if new conversation to many, then add to queue
+  async function handleNewMessage(payload: Message) {
+    const index = conversationsStore.conversations.findIndex((conv: IConversation) => conv.id === payload.conversation_id);
+    if (index === -1) {
+      const conv = await conversationsStore.fetchConversationById(payload.conversation_id);
+
+      const newConversation = {
+        ...conv,
+        preview: conv?.last_message,
+        unread: 0,
+        created_at: conv?.last_message_at,
+        last_message_at: conv?.last_message_at,
+        last_message_time: conv?.last_message_time,
+        last_message: conv?.last_message,
+      }
+      return await conversationsStore.addConversation(newConversation as IConversation);
+
+    }
+    conversationsStore.updateLastMessage(index, payload.content);
 
     const isOpenedConversation = conversationsStore.activeConversation?.id === payload.conversation_id;
     if (isOpenedConversation) {

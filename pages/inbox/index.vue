@@ -44,13 +44,12 @@ const authId = user.value?.id;
 const conversationsStore = useConversationsStore();
 const messageStore = useMessagesStore();
 const { trackPresence, untrackPresence } = usePresence();
-const { setupMessageSubscription, setupConversationSubscription } = useConversationSubscriptions();
+const { setupMessageSubscription } = useConversationSubscriptions();
 const { createNewConversation } = useConversationManagement();
 const supabase = useSupabaseClient();
 
 // Realtime subscriptions
 const channel = setupMessageSubscription();
-const conversationChannel = setupConversationSubscription();
 
 const createConversation = async () => {
   const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b');
@@ -61,7 +60,9 @@ const createConversation = async () => {
     preview: conversation?.last_message || 'No messages yet',
     unread: 0
   }
-  conversationsStore.addConversation(newConversation);
+  const conversation22 = await conversationsStore.addConversation(newConversation);
+
+  conversationsStore.setActiveConversation(conversation22);
 }
 
 // Lifecycle hooks

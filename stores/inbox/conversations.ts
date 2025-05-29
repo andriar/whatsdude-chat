@@ -31,9 +31,14 @@ export const useConversationsStore = defineStore('conversations', () => {
       console.warn(`No user_id found for conversation ${conversation.conversation_id}`);
       return;
     }
-    const newConversation = createConversationObject(conversation, participants); 
-    conversations.unshift(newConversation);
+    const newConversation = createConversationObject(conversation, participants);
+    
+    conversations.unshift(newConversation as IConversation);
+
+    return newConversation;
   }
+
+
   async function fetchConversations() {
     loadingConversations.value = true;
   
@@ -53,6 +58,21 @@ export const useConversationsStore = defineStore('conversations', () => {
   
     if (conversations.length > 0) setActiveConversation(conversations[0]);
     loadingConversations.value = false;
+  }
+
+  async function fetchConversationById(conversationId: number) {
+    const { data, error } = await supabase.rpc('get_own_conversation_by_id', {
+      conv_id: conversationId
+    });
+
+    if (error) {
+      console.error('Error fetching conversation:', error);
+      return null;
+    }
+
+    if (!data || data.length === 0) return null;
+
+    return data[0] as IConversation;
   }
 
   async function populateConversations(conversationData: IConversation[]) {
@@ -75,6 +95,7 @@ export const useConversationsStore = defineStore('conversations', () => {
   }
 
   function createConversationObject(conv: IConversation, participants: { name: string; avatar: string; user_id: string }) {
+    
     return {
       id: Number(conv.conversation_id),
       name: participants?.name || 'unknown user',
@@ -83,15 +104,12 @@ export const useConversationsStore = defineStore('conversations', () => {
       preview: conv.last_message || 'No messages yet',
       last_message: conv.last_message || 'No messages yet',
       last_message_time: conv.last_message_time,
-      last_message_at: formatDateTime(conv.last_message_time),
+      last_message_at: conv.last_message_time ? formatDateTime(conv.last_message_time) : '',
       unread: 0,
     };
   }
 
-  async function updateLastMessage(conversationId: number, lastMessage: string) {
-    const index = conversations.findIndex(conv => conv.id === conversationId);
-    if (index === -1) return;
-    
+  async function updateLastMessage(index: number, lastMessage: string) {
     // Create new conversation object with updated last_message
     const updatedConversation = {
       ...conversations[index],
@@ -115,5 +133,6 @@ export const useConversationsStore = defineStore('conversations', () => {
     addConversation,
     fetchConversations,
     updateLastMessage,
+    fetchConversationById,
   }
 })
