@@ -7,7 +7,19 @@
   },
   "tailwindCSS.classAttributes": ["class", "ui"],
   "tailwindCSS.experimental.classRegex": [["ui:\\s*{([^)]*)\\s*}", "(?:'|\"|`)([^']*)(?:'|\"|`)"]],
-  "cSpell.words": ["autoresize", "conv", "lucide", "Nuxt", "nuxtjs", "Supabase", "vueuse"],
+  "cSpell.words": [
+    "autoresize",
+    "conv",
+    "grayscale",
+    "lucide",
+    "Neue",
+    "Nuxt",
+    "nuxtjs",
+    "Roboto",
+    "Segoe",
+    "Supabase",
+    "vueuse"
+  ],
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"

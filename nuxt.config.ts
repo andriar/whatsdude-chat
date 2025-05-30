@@ -19,6 +19,20 @@ export default defineNuxtConfig({
     '@pinia/nuxt',
   ],
 
+  fonts: {
+    families: [{
+      name: 'Inter',
+      provider: 'google',
+      weights: [400, 500, 600],
+      preload: true,
+      display: 'swap'
+    }],
+    defaults: {
+      weights: [400],
+      preload: true
+    }
+  },
+
   app: {
     head: {
       link: [
