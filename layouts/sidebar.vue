@@ -1,7 +1,29 @@
 <template>
   <UApp>
     <div class="flex h-screen w-screen">
-      <LoadingScreen :isLoading="profileStore.loading" :context="loadingContext" />
+      <Transition
+        enter-active-class="transition duration-200 ease-out"
+        enter-from-class="transform opacity-0"
+        enter-to-class="opacity-100"
+        leave-active-class="transition duration-150 ease-in"
+        leave-from-class="opacity-100"
+        leave-to-class="transform opacity-0"
+      >
+        <div
+          v-if="profileStore.loading"
+          class="bg-white/50 backdrop-blur-sm fixed top-0 left-0 w-full h-full flex items-center justify-center z-10"
+        >
+          <div class="w-[300px] h-[300px]">
+            <LottieAnimation
+              :animation-data="defaultLoading"
+              width="300"
+              height="300"
+              loop
+              autoplay
+            />
+          </div>
+        </div>
+      </Transition>
       <!-- Sidebar -->
       <aside class="w-64 bg-white flex flex-col p-8 pt-8 pb-4 rounded-l-3xl shadow-md">
         <div class="flex items-center mb-8">
@@ -13,7 +35,8 @@
           <UNavigationMenu
             :items="navItems"
             orientation="vertical"
-            class="data-[orientation=vertical]:w-48" />
+            class="data-[orientation=vertical]:w-48"
+          />
         </nav>
       </aside>
 
@@ -25,77 +48,76 @@
 </template>
 
 <script lang="ts" setup>
-import { useConversationsStore } from '~/stores/inbox/conversations';
-import LoadingScreen from '~/components/LoadingScreen.vue';
+  import { useConversationsStore } from '~/stores/inbox/conversations'
+  import LottieAnimation from '~/components/LottieAnimation.vue'
+  import defaultLoading from '~/assets/lottie/default-loading.json'
 
-const navItems = ref([
-  [
-    {
-      label: 'inbox',
-      icon: 'i-lucide-message-circle',
-      description: 'Inbox.',
-      to: '/inbox',
-    },
-    {
-      label: 'example',
-      icon: 'i-lucide-equal-approximately',
-      description: 'Example.',
-      to: '/example',
-    },
-    {
-      label: 'Logout',
-      icon: 'i-lucide-log-out',
-      description: 'Logout.',
-      onSelect: async () => {
-        const { error } = await useSupabaseClient().auth.signOut();
-        if (error) {
-          console.error('Error signing out:', error);
-        } else {
-          navigateTo('/login');
-        }
+  // Composables
+  const user = useSupabaseUser()
+  const authId = user.value?.id
+  const { trackPresence, untrackPresence } = usePresence()
+  const supabase = useSupabaseClient()
+  const { setupMessageSubscription } = useConversationSubscriptions()
+  const channel = setupMessageSubscription()
+  const conversationsStore = useConversationsStore()
+  const profileStore = useProfileStore()
+
+  const navItems = ref([
+    [
+      {
+        label: 'inbox',
+        icon: 'i-lucide-message-circle',
+        description: 'Inbox.',
+        to: '/inbox',
       },
-    },
-  ],
-  [
-    {
-      label: 'GitHub',
-      icon: 'i-simple-icons-github',
-      badge: '3.8k',
-      to: 'https://github.com/nuxt/ui',
-      target: '_blank',
-    },
-    {
-      label: 'Help',
-      icon: 'i-lucide-circle-help',
-      disabled: true,
-    },
-  ],
-]);
+      {
+        label: 'example',
+        icon: 'i-lucide-equal-approximately',
+        description: 'Example.',
+        to: '/example',
+      },
+      {
+        label: 'Logout',
+        icon: 'i-lucide-log-out',
+        description: 'Logout.',
+        onSelect: async () => {
+          const { error } = await useSupabaseClient().auth.signOut()
+          if (error) {
+            console.error('Error signing out:', error)
+          } else {
+            navigateTo('/login')
+          }
+        },
+      },
+    ],
+    [
+      {
+        label: 'GitHub',
+        icon: 'i-simple-icons-github',
+        badge: '3.8k',
+        to: 'https://github.com/nuxt/ui',
+        target: '_blank',
+      },
+      {
+        label: 'Help',
+        icon: 'i-lucide-circle-help',
+        disabled: true,
+      },
+    ],
+  ])
 
-const loadingContext = ref('Loading profile...');
+  // Lifecycle hooks
+  onMounted(async () => {
+    if (authId) {
+      conversationsStore.fetchConversations()
+      trackPresence(authId)
+    }
+  })
 
-// Composables
-const user = useSupabaseUser();
-const authId = user.value?.id;
-const { trackPresence, untrackPresence } = usePresence();
-const supabase = useSupabaseClient();
-const { setupMessageSubscription } = useConversationSubscriptions();
-const channel = setupMessageSubscription();
-const conversationsStore = useConversationsStore();
-const profileStore = useProfileStore();
-
-// Lifecycle hooks
-onMounted(async () => {
-  if (authId) {
-    conversationsStore.fetchConversations();
-    trackPresence(authId);
-  }
-});
-
-onUnmounted(() => {
-  if (channel) {
-    supabase.removeChannel(channel);
-  }
-  untrackPresence();
-});
+  onUnmounted(() => {
+    if (channel) {
+      supabase.removeChannel(channel)
+    }
+    untrackPresence()
+  })
 </script>
