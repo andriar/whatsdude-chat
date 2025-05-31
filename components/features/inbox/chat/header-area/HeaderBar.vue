@@ -3,7 +3,7 @@
     <div class="flex items-center gap-x-4 flex-1">
       <!-- Avatar -->
       <div class="relative">
-        <UAvatar :src="activeConversation.avatar" class="w-10 h-10" />
+        <UAvatar :src="activeConversation.avatar" class="w-8 h-8" />
         <div
           class="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full border-2 border-white"
           :class="{

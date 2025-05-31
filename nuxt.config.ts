@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     '@nuxtjs/supabase',
     '@pinia/nuxt',
     'nuxt-lottie',
+    '@formkit/auto-animate/nuxt'
   ],
 
   fonts: {

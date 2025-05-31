@@ -1,5 +1,7 @@
 <template>
-  <section class="flex-1 bg-white rounded-2xl shadow-md flex flex-col overflow-hidden">
+  <section
+    class="bg-white rounded-2xl shadow-md flex flex-col overflow-hidden max-h-full min-h-full"
+  >
     <!-- Header Chat Section -->
     <HeaderBar :active-conversation="activeConversation || ({} as IConversation)" />
 
