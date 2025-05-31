@@ -14,13 +14,7 @@
           class="bg-white/50 backdrop-blur-sm fixed top-0 left-0 w-full h-full flex items-center justify-center z-10"
         >
           <div class="w-[300px] h-[300px]">
-            <LottieAnimation
-              :animation-data="defaultLoading"
-              width="300"
-              height="300"
-              loop
-              autoplay
-            />
+            <Lottie name="default-loading" autoplay loop />
           </div>
         </div>
       </Transition>
@@ -49,8 +43,7 @@
 
 <script lang="ts" setup>
   import { useConversationsStore } from '~/stores/inbox/conversations'
-  import LottieAnimation from '~/components/LottieAnimation.vue'
-  import defaultLoading from '~/assets/lottie/default-loading.json'
+  // import defaultLoading from '~/assets/lottie/default-loading.json'
 
   // Composables
   const user = useSupabaseUser()

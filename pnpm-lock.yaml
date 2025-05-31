@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@formkit/auto-animate':
+        specifier: ^0.8.2
+        version: 0.8.2
       '@nuxt/eslint':
         specifier: 1.4.1
         version: 1.4.1(@vue/compiler-sfc@3.5.14)(eslint@9.27.0(jiti@2.4.2))(magicast@0.3.5)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.2)(yaml@2.8.0))
@@ -29,6 +32,9 @@ importers:
       nuxt:
         specifier: ^3.17.4
         version: 3.17.4(@parcel/watcher@2.5.1)(@types/node@22.15.21)(db0@0.3.2)(eslint@9.27.0(jiti@2.4.2))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.41.0)(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.2)(yaml@2.8.0))(yaml@2.8.0)
+      nuxt-lottie:
+        specifier: ^1.0.3
+        version: 1.0.3(magicast@0.3.5)
       tailwindcss:
         specifier: ^4.1.7
         version: 4.1.7
@@ -459,6 +465,9 @@ packages:
 
   '@floating-ui/vue@1.1.6':
     resolution: {integrity: sha512-XFlUzGHGv12zbgHNk5FN2mUB7ROul3oG2ENdTpWdE+qMFxyNxWSRmsoyhiEnpmabNm6WnUvR1OvJfUfN4ojC1A==}
+
+  '@formkit/auto-animate@0.8.2':
+    resolution: {integrity: sha512-SwPWfeRa5veb1hOIBMdzI+73te5puUBHmqqaF1Bu7FjvxlYSz/kJcZKSa9Cg60zL0uRNeJL2SbRxV6Jp6Q1nFQ==}
 
   '@humanfs/core@0.19.1':
     resolution: {integrity: sha512-5DyQ4+1JEUzejeK1JGICcideyfUbGixgS9jNgex5nqkW+cY7WZhxBigmieN5Qnw9ZosSNVC9KQKyb+GUaGyKUA==}
@@ -3288,6 +3297,9 @@ packages:
     resolution: {integrity: sha512-TFYA4jnP7PVbmlBIfhlSe+WKxs9dklXMTEGcBCIvLhE/Tn3H6Gk1norupVW7m5Cnd4bLcr08AytbyV/xj7f/kQ==}
     engines: {node: '>= 12.0.0'}
 
+  lottie-web@5.13.0:
+    resolution: {integrity: sha512-+gfBXl6sxXMPe8tKQm7qzLnUy5DUPJPKIyRHwtpCpyUEYjHYRJC/5gjUvdkuO2c3JllrPtHXH5UJJK8LRYl5yQ==}
+
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
 
@@ -3557,6 +3569,9 @@ packages:
 
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
+
+  nuxt-lottie@1.0.3:
+    resolution: {integrity: sha512-1Iw08xUfx4T2VJVo2akozuwzyZwuOAlgF5I0oPmgPRK5a4jdQaMnKsuG43VietSIMVRZFkSHiL0fqwpV8I/LXg==}
 
   nuxt@3.17.4:
     resolution: {integrity: sha512-49tkp7/+QVhuEOFoTDVvNV6Pc5+aI7wWjZHXzLUrt3tlWLPFh0yYbNXOc3kaxir1FuhRQHHyHZ7azCPmGukfFg==}
@@ -5414,6 +5429,8 @@ snapshots:
     transitivePeerDependencies:
       - '@vue/composition-api'
       - vue
+
+  '@formkit/auto-animate@0.8.2': {}
 
   '@humanfs/core@0.19.1': {}
 
@@ -8693,6 +8710,8 @@ snapshots:
       safe-stable-stringify: 2.5.0
       triple-beam: 1.4.1
 
+  lottie-web@5.13.0: {}
+
   lru-cache@10.4.3: {}
 
   lru-cache@5.1.1:
@@ -9011,6 +9030,13 @@ snapshots:
   nth-check@2.1.1:
     dependencies:
       boolbase: 1.0.0
+
+  nuxt-lottie@1.0.3(magicast@0.3.5):
+    dependencies:
+      '@nuxt/kit': 3.17.4(magicast@0.3.5)
+      lottie-web: 5.13.0
+    transitivePeerDependencies:
+      - magicast
 
   nuxt@3.17.4(@parcel/watcher@2.5.1)(@types/node@22.15.21)(db0@0.3.2)(eslint@9.27.0(jiti@2.4.2))(ioredis@5.6.1)(lightningcss@1.30.1)(magicast@0.3.5)(optionator@0.9.4)(rollup@4.41.0)(terser@5.39.2)(typescript@5.8.3)(vite@6.3.5(@types/node@22.15.21)(jiti@2.4.2)(lightningcss@1.30.1)(terser@5.39.2)(yaml@2.8.0))(yaml@2.8.0):
     dependencies:

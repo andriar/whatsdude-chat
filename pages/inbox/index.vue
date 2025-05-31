@@ -2,12 +2,14 @@
   <div class="flex h-screen bg-gray-100 w-full">
     <main class="flex flex-1 p-8 gap-8">
       <!-- Inbox List -->
-      <section class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6">
+      <section
+        v-if="conversationsStore.conversations.length > 0"
+        class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6"
+      >
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
           <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="createConversation" />
         </div>
-        <UTabs :items="tabs" class="px-6 pb-4" />
         <RoomListContainer
           :items="conversationsStore.conversations"
           :active-conversation="conversationsStore.activeConversation"
@@ -16,16 +18,44 @@
       </section>
 
       <!-- Chat Area -->
-      <ChatContainer
-        :active-conversation="conversationsStore.activeConversation"
-        :messages="messageStore.messages"
-      />
+
+      <div class="flex-1 relative overflow-hidden">
+        <ChatContainer
+          v-if="conversationsStore.activeConversation"
+          :active-conversation="conversationsStore.activeConversation"
+          :messages="messageStore.messages"
+        />
+
+        <EmptyChat
+          v-if="
+            !messageStore.loading &&
+            !conversationsStore.activeConversation &&
+            conversationsStore.conversations.length > 0
+          "
+          class="absolute top-0 left-0 w-full h-full"
+        >
+          <div class="flex flex-col items-center justify-center gap-4 w-full">
+            <Lottie name="conversation" autoplay loop width="300px" height="300px" />
+            <p class="text-gray-500">You don't have any conversations yet.</p>
+
+            <UButton label="Create Conversation" @click="createConversation" />
+          </div>
+        </EmptyChat>
+
+        <EmptyChat v-else-if="messageStore.loading" class="absolute top-0 left-0 w-full h-full">
+          <div class="flex flex-col items-center justify-center h-full">
+            <Lottie name="default-loading" autoplay loop width="300px" height="300px" />
+            <p class="text-gray-500 -translate-y-24">Loading messages...</p>
+          </div>
+        </EmptyChat>
+      </div>
     </main>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import type { IConversation, ITab } from '@/types/inbox'
+  import type { IConversation } from '@/types/inbox'
+  import EmptyChat from '~/components/empty/EmptyChat.vue'
   import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue'
   import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue'
   import { useConversationsStore } from '~/stores/inbox/conversations'
@@ -35,9 +65,6 @@
   definePageMeta({
     layout: 'sidebar',
   })
-
-  // Constants
-  const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }]
 
   // Composables
   const conversationsStore = useConversationsStore()
