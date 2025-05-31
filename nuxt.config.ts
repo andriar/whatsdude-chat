@@ -17,6 +17,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     '@nuxtjs/supabase',
     '@pinia/nuxt',
+    'nuxt-lottie',
   ],
 
   fonts: {
@@ -31,6 +32,11 @@ export default defineNuxtConfig({
       weights: [400],
       preload: true
     }
+  },
+
+  lottie: {
+    componentName: 'Lottie', // Optional: Customize the component name
+    lottieFolder: '/assets/lottie' // Optional: Customize the Lottie folder path
   },
 
   app: {
