@@ -24,6 +24,8 @@ export const useProfileStore = defineStore('profile', () => {
     }
 
     loading.value = true;
+    error.value = null;
+    
     try {
       const { data, error: fetchError } = await supabase
         .from('user_profiles')
@@ -33,11 +35,13 @@ export const useProfileStore = defineStore('profile', () => {
 
       if (fetchError) {
         error.value = fetchError.message;
+        profile.value = null;
       } else {
         profile.value = data;
       }
     } catch (e) {
       error.value = e instanceof Error ? e.message : 'An unknown error occurred';
+      profile.value = null;
     } finally {
       loading.value = false;
     }
@@ -82,7 +86,7 @@ export const useProfileStore = defineStore('profile', () => {
   // Watch for user changes and fetch profile
   watch(
     () => useSupabaseUser().value,
-    newUser => {
+    (newUser) => {
       if (newUser) {
         fetchProfile();
       } else {

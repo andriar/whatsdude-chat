@@ -1,4 +1,3 @@
-import { useSupabaseClient, useSupabaseUser } from '#imports';
 import type { Database } from '~/types/database.types';
 
 type Conversation = Database['public']['Tables']['conversations']['Insert'];
