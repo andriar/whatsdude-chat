@@ -8,7 +8,7 @@
       >
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
-          <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="createConversation" />
+          <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="openPopUp" />
         </div>
         <RoomListContainer
           :items="conversationsStore.conversations"
@@ -38,7 +38,7 @@
             <Lottie name="conversation" autoplay loop width="300px" height="300px" />
             <p class="text-gray-500">You don't have any conversations yet.</p>
 
-            <UButton label="Create Conversation" @click="createConversation" />
+            <UButton label="Create Conversation" @click="openPopUp" />
           </div>
         </EmptyChat>
 
@@ -49,6 +49,8 @@
           </div>
         </EmptyChat>
       </div>
+
+      <PopUpNewConversation v-model:open="isOpen" @select="handleSelect" />
     </main>
   </div>
 </template>
@@ -61,6 +63,7 @@
   import { useConversationsStore } from '~/stores/inbox/conversations'
   import { useMessagesStore } from '~/stores/inbox/messages'
   import { useConversationManagement } from '~/composables/useConversationManagement'
+  import PopUpNewConversation from '~/components/features/inbox/PopUpNewConversation.vue'
 
   definePageMeta({
     layout: 'sidebar',
@@ -70,9 +73,22 @@
   const conversationsStore = useConversationsStore()
   const messageStore = useMessagesStore()
   const { createNewConversation } = useConversationManagement()
+  const isOpen = ref(false)
 
-  const createConversation = async () => {
-    const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b')
+  const openPopUp = () => {
+    isOpen.value = true
+  }
+
+  const createConversation = async (targetId: string) => {
+    const existingConversation = conversationsStore.conversations.find(
+      conv => conv.sender_id === targetId
+    )
+
+    if (existingConversation) {
+      conversationsStore.setActiveConversation(existingConversation)
+      return
+    }
+    const conversation = await createNewConversation(targetId)
 
     const data: IConversation = {
       ...conversation,
@@ -80,8 +96,14 @@
       preview: conversation?.last_message || 'No messages yet',
       unread: 0,
     }
+
     const newConversation = await conversationsStore.addConversation(data)
 
     conversationsStore.setActiveConversation(newConversation)
+  }
+
+  const handleSelect = async (userProfile: any) => {
+    isOpen.value = false
+    createConversation(userProfile.user_id)
   }
 </script>

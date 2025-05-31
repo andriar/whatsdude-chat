@@ -32,6 +32,15 @@ export function useConversationManagement() {
 
     if (!conversationData) return;
 
+    // Check if conversation_id already exists in conversation_participants
+    const { data: existingParticipant } = await supabase
+      .from('conversation_participants')
+      .select()
+      .eq('conversation_id', conversationData.id)
+      .single();
+
+    if (existingParticipant) return conversationData
+    
     const participants: ConversationParticipant[] = [
       { conversation_id: conversationData.id, user_id: authId },
       { conversation_id: conversationData.id, user_id: targetUserId },
