@@ -7,9 +7,11 @@ export const useMessagesStore = defineStore('messages', () => {
   const user = useSupabaseUser();
   // state
   const messages = reactive<IMessage[]>([]);
+  const loading = ref(false);
 
   // actions
   async function fetchMessages(conversationId: number) {
+    loading.value = true;
     const { data, error } = await supabase
       .from('messages')
       .select('*')
@@ -20,6 +22,7 @@ export const useMessagesStore = defineStore('messages', () => {
     (data as ISupabaseMessage[]).forEach((message: ISupabaseMessage) => {
       addMessage(message);
     });
+    loading.value = false;
   }
 
   function resetMessages() {
@@ -33,7 +36,7 @@ export const useMessagesStore = defineStore('messages', () => {
       type: 'text',
       text: message.content,
       created_at: message.created_at,
-    });
+    })
   }
 
   // expose managed state
@@ -42,5 +45,6 @@ export const useMessagesStore = defineStore('messages', () => {
     fetchMessages,
     addMessage,
     resetMessages,
-  };
-});
+    loading,
+  }
+})

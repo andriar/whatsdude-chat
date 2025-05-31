@@ -19,11 +19,31 @@
 
       <!-- Chat Area -->
       <ChatContainer
-        v-if="conversationsStore.activeConversation"
+        v-if="conversationsStore.activeConversation && !messageStore.loading"
         :active-conversation="conversationsStore.activeConversation"
         :messages="messageStore.messages"
       />
-      <EmptyChat v-else @create-conversation="handleCreateConversation" />
+      <EmptyChat
+        v-else-if="
+          !messageStore.loading &&
+          !conversationsStore.activeConversation &&
+          conversationsStore.conversations.length > 0
+        "
+      >
+        <div class="flex flex-col items-center justify-center gap-4 w-full">
+          <Lottie name="conversation" autoplay loop width="300px" height="300px" />
+          <p class="text-gray-500">You don't have any conversations yet.</p>
+
+          <UButton label="Create Conversation" @click="createConversation" />
+        </div>
+      </EmptyChat>
+
+      <EmptyChat v-else-if="messageStore.loading">
+        <div class="flex flex-col items-center justify-center h-full">
+          <Lottie name="default-loading" autoplay loop width="300px" height="300px" />
+          <p class="text-gray-500 -translate-y-24">Loading messages...</p>
+        </div>
+      </EmptyChat>
     </main>
   </div>
 </template>
@@ -58,9 +78,5 @@
     const newConversation = await conversationsStore.addConversation(data)
 
     conversationsStore.setActiveConversation(newConversation)
-  }
-
-  function handleCreateConversation() {
-    createConversation()
   }
 </script>
