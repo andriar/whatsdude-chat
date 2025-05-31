@@ -38,7 +38,7 @@
             <Lottie name="conversation" autoplay loop width="300px" height="300px" />
             <p class="text-gray-500">You don't have any conversations yet.</p>
 
-            <UButton label="Create Conversation" @click="createConversation" />
+            <UButton label="Create Conversation" @click="openPopUp" />
           </div>
         </EmptyChat>
 
@@ -79,8 +79,16 @@
     isOpen.value = true
   }
 
-  const createConversation = async () => {
-    const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b')
+  const createConversation = async (targetId: string) => {
+    const existingConversation = conversationsStore.conversations.find(
+      conv => conv.sender_id === targetId
+    )
+
+    if (existingConversation) {
+      conversationsStore.setActiveConversation(existingConversation)
+      return
+    }
+    const conversation = await createNewConversation(targetId)
 
     const data: IConversation = {
       ...conversation,
@@ -88,22 +96,14 @@
       preview: conversation?.last_message || 'No messages yet',
       unread: 0,
     }
+
     const newConversation = await conversationsStore.addConversation(data)
 
     conversationsStore.setActiveConversation(newConversation)
   }
 
-  const handleSelect = async (user: any) => {
+  const handleSelect = async (userProfile: any) => {
     isOpen.value = false
-    console.log('handleSelect', user)
-    // const conversation = await createNewConversation(user.id)
-
-    // const data: IConversation = {
-    //   ...conversation,
-    //   conversation_id: conversation?.id,
-    // }
-    // const newConversation = await conversationsStore.addConversation(data)
-
-    // conversationsStore.setActiveConversation(newConversation)
+    createConversation(userProfile.user_id)
   }
 </script>
