@@ -2,12 +2,14 @@
   <div class="flex h-screen bg-gray-100 w-full">
     <main class="flex flex-1 p-8 gap-8">
       <!-- Inbox List -->
-      <section class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6">
+      <section
+        v-if="conversationsStore.conversations.length > 0"
+        class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6"
+      >
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
           <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="createConversation" />
         </div>
-        <UTabs :items="tabs" class="px-6 pb-4" />
         <RoomListContainer
           :items="conversationsStore.conversations"
           :active-conversation="conversationsStore.activeConversation"
@@ -17,15 +19,18 @@
 
       <!-- Chat Area -->
       <ChatContainer
+        v-if="conversationsStore.activeConversation"
         :active-conversation="conversationsStore.activeConversation"
         :messages="messageStore.messages"
       />
+      <EmptyChat v-else @create-conversation="handleCreateConversation" />
     </main>
   </div>
 </template>
 
 <script lang="ts" setup>
-  import type { IConversation, ITab } from '@/types/inbox'
+  import type { IConversation } from '@/types/inbox'
+  import EmptyChat from '~/components/empty/EmptyChat.vue'
   import ChatContainer from '~/components/features/inbox/chat/ChatContainer.vue'
   import RoomListContainer from '~/components/features/inbox/RoomListContainer.vue'
   import { useConversationsStore } from '~/stores/inbox/conversations'
@@ -35,9 +40,6 @@
   definePageMeta({
     layout: 'sidebar',
   })
-
-  // Constants
-  const tabs: ITab[] = [{ label: 'General' }, { label: 'Total' }]
 
   // Composables
   const conversationsStore = useConversationsStore()
@@ -56,5 +58,9 @@
     const newConversation = await conversationsStore.addConversation(data)
 
     conversationsStore.setActiveConversation(newConversation)
+  }
+
+  function handleCreateConversation() {
+    createConversation()
   }
 </script>
