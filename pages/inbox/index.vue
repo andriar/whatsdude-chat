@@ -8,7 +8,7 @@
       >
         <div class="flex items-center justify-between px-6 pb-4">
           <h2 class="text-xl font-semibold">Inbox</h2>
-          <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="createConversation" />
+          <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="openPopUp" />
         </div>
         <RoomListContainer
           :items="conversationsStore.conversations"
@@ -49,6 +49,8 @@
           </div>
         </EmptyChat>
       </div>
+
+      <PopUpNewConversation v-model:open="isOpen" @select="handleSelect" />
     </main>
   </div>
 </template>
@@ -61,6 +63,7 @@
   import { useConversationsStore } from '~/stores/inbox/conversations'
   import { useMessagesStore } from '~/stores/inbox/messages'
   import { useConversationManagement } from '~/composables/useConversationManagement'
+  import PopUpNewConversation from '~/components/features/inbox/PopUpNewConversation.vue'
 
   definePageMeta({
     layout: 'sidebar',
@@ -70,6 +73,11 @@
   const conversationsStore = useConversationsStore()
   const messageStore = useMessagesStore()
   const { createNewConversation } = useConversationManagement()
+  const isOpen = ref(false)
+
+  const openPopUp = () => {
+    isOpen.value = true
+  }
 
   const createConversation = async () => {
     const conversation = await createNewConversation('8886fd45-4c07-49dd-ab1e-84c93f43807b')
@@ -83,5 +91,19 @@
     const newConversation = await conversationsStore.addConversation(data)
 
     conversationsStore.setActiveConversation(newConversation)
+  }
+
+  const handleSelect = async (user: any) => {
+    isOpen.value = false
+    console.log('handleSelect', user)
+    // const conversation = await createNewConversation(user.id)
+
+    // const data: IConversation = {
+    //   ...conversation,
+    //   conversation_id: conversation?.id,
+    // }
+    // const newConversation = await conversationsStore.addConversation(data)
+
+    // conversationsStore.setActiveConversation(newConversation)
   }
 </script>
