@@ -30,7 +30,7 @@
           v-if="
             !messageStore.loading &&
             !conversationsStore.activeConversation &&
-            conversationsStore.conversations.length > 0
+            conversationsStore.conversations.length == 0
           "
           class="absolute top-0 left-0 w-full h-full"
         >
