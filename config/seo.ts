@@ -1,31 +1,51 @@
 export const seoConfig = {
-  title: 'WhatsDude - Modern Messaging Platform',
-  description: 'WhatsDude is a modern messaging platform that helps you stay connected with your friends and family. Secure, fast, and easy to use.',
+  title: 'LinkUp - Secure Private Messaging Platform',
+  description: 'LinkUp is a secure and private messaging platform that helps you stay connected with your friends and family. End-to-end encrypted, fast, and easy to use.',
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, initial-scale=1' },
     { 
       name: 'description', 
-      content: 'WhatsDude is a modern messaging platform that helps you stay connected with your friends and family. Secure, fast, and easy to use.'
+      content: 'LinkUp is a secure and private messaging platform that helps you stay connected with your friends and family. End-to-end encrypted, fast, and easy to use.'
     },
     { name: 'format-detection', content: 'telephone=no' },
     { name: 'theme-color', content: '#ffffff' },
-    { property: 'og:title', content: 'WhatsDude - Modern Messaging Platform' },
-    { property: 'og:description', content: 'WhatsDude is a modern messaging platform that helps you stay connected with your friends and family. Secure, fast, and easy to use.' },
+    { property: 'og:title', content: 'LinkUp - Secure Private Messaging Platform' },
+    { property: 'og:description', content: 'LinkUp is a secure and private messaging platform that helps you stay connected with your friends and family. End-to-end encrypted, fast, and easy to use.' },
     { property: 'og:type', content: 'website' },
     { name: 'twitter:card', content: 'summary_large_image' },
-    { name: 'twitter:title', content: 'WhatsDude - Modern Messaging Platform' },
-    { name: 'twitter:description', content: 'WhatsDude is a modern messaging platform that helps you stay connected with your friends and family. Secure, fast, and easy to use.' }
+    { name: 'twitter:title', content: 'LinkUp - Secure Private Messaging Platform' },
+    { name: 'twitter:description', content: 'LinkUp is a secure and private messaging platform that helps you stay connected with your friends and family. End-to-end encrypted, fast, and easy to use.' }
   ],
   link: [
     {
       rel: 'icon',
       type: 'image/x-icon',
-      href: '/favicon.ico',
+      href: '/favicon/favicon.ico',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '32x32',
+      href: '/favicon/favicon-32x32.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '16x16',
+      href: '/favicon/favicon-16x16.png',
+    },
+    {
+      rel: 'apple-touch-icon',
+      href: '/favicon/apple-touch-icon.png',
+    },
+    {
+      rel: 'manifest',
+      href: '/favicon/site.webmanifest',
     },
     {
       rel: 'canonical',
-      href: 'https://whatsdude.com'
+      href: 'https://linkup.com'
     }
   ]
 } 

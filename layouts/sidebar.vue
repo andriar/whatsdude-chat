@@ -28,7 +28,7 @@
             size="2xl"
             class="mr-2 text-gray-900 dark:text-gray-100"
           />
-          <span class="font-bold text-lg text-gray-900 dark:text-gray-100">WhatsDude</span>
+          <span class="font-bold text-lg text-gray-900 dark:text-gray-100">LinkUp</span>
         </div>
 
         <nav class="flex-1">
