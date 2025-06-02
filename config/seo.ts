@@ -44,6 +44,18 @@ export const seoConfig = {
       href: '/favicon/site.webmanifest',
     },
     {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '192x192',
+      href: '/favicon/android-chrome-192x192.png',
+    },
+    {
+      rel: 'icon',
+      type: 'image/png',
+      sizes: '512x512',
+      href: '/favicon/android-chrome-512x512.png',
+    },
+    {
       rel: 'canonical',
       href: 'https://linkup.com'
     }
