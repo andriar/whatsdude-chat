@@ -1,34 +1,44 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <UCard class="w-full max-w-md">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <UCard class="w-full max-w-md dark:bg-gray-800">
       <template #header>
-        <h1 class="text-xl font-bold">Sign Up</h1>
+        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Sign Up</h1>
       </template>
 
       <UForm :state="{ email, password, confirmPassword }" @submit.prevent="onSubmit">
         <div class="flex flex-col gap-4">
-          <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
+          <UInput
+            v-model="email"
+            type="email"
+            placeholder="Enter your email"
+            class="w-full dark:bg-gray-700 dark:text-gray-100"
+          />
 
           <UInput
             v-model="password"
             type="password"
             placeholder="Enter your password"
-            class="w-full" />
+            class="w-full dark:bg-gray-700 dark:text-gray-100"
+          />
 
           <UInput
             v-model="confirmPassword"
             type="password"
             placeholder="Confirm your password"
-            class="w-full" />
+            class="w-full dark:bg-gray-700 dark:text-gray-100"
+          />
         </div>
 
         <div class="mt-4">
           <UButton type="submit" color="primary" block :loading="loading">Sign Up</UButton>
         </div>
 
-        <div class="mt-4 text-center text-sm text-gray-600">
+        <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
           Already have an account?
-          <NuxtLink to="/login" class="text-primary-600 hover:text-primary-500">
+          <NuxtLink
+            to="/login"
+            class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+          >
             Login here
           </NuxtLink>
         </div>
@@ -38,57 +48,57 @@
 </template>
 
 <script setup>
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-const loading = ref(false);
+  const email = ref('')
+  const password = ref('')
+  const confirmPassword = ref('')
+  const loading = ref(false)
 
-async function onSubmit() {
-  if (password.value !== confirmPassword.value) {
-    const toast = useToast();
-    toast.add({
-      title: 'Validation Error',
-      description: 'Passwords do not match',
-      color: 'red',
-      icon: 'i-lucide-alert-circle',
-      timeout: 5000,
-    });
-    return;
-  }
-
-  loading.value = true;
-  try {
-    const { error } = await useSupabaseClient().auth.signUp({
-      email: email.value,
-      password: password.value,
-    });
-
-    if (error) {
-      const toast = useToast();
+  async function onSubmit() {
+    if (password.value !== confirmPassword.value) {
+      const toast = useToast()
       toast.add({
-        title: 'Signup Failed',
-        description: error.message || 'There was a problem with your request.',
+        title: 'Validation Error',
+        description: 'Passwords do not match',
         color: 'red',
         icon: 'i-lucide-alert-circle',
         timeout: 5000,
-      });
-      return;
+      })
+      return
     }
 
-    const toast = useToast();
-    toast.add({
-      title: 'Success',
-      description: 'Please check your email to verify your account.',
-      color: 'green',
-      icon: 'i-lucide-check-circle',
-      timeout: 5000,
-    });
+    loading.value = true
+    try {
+      const { error } = await useSupabaseClient().auth.signUp({
+        email: email.value,
+        password: password.value,
+      })
 
-    navigateTo('/login');
-  } catch (error) {
-    console.error('Signup failed:', error);
-  } finally {
-    loading.value = false;
+      if (error) {
+        const toast = useToast()
+        toast.add({
+          title: 'Signup Failed',
+          description: error.message || 'There was a problem with your request.',
+          color: 'red',
+          icon: 'i-lucide-alert-circle',
+          timeout: 5000,
+        })
+        return
+      }
+
+      const toast = useToast()
+      toast.add({
+        title: 'Success',
+        description: 'Please check your email to verify your account.',
+        color: 'green',
+        icon: 'i-lucide-check-circle',
+        timeout: 5000,
+      })
+
+      navigateTo('/login')
+    } catch (error) {
+      console.error('Signup failed:', error)
+    } finally {
+      loading.value = false
+    }
   }
-}
 </script>

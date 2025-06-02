@@ -1,6 +1,6 @@
 <template>
   <section
-    class="bg-white rounded-2xl shadow-md flex flex-col overflow-hidden max-h-full min-h-full"
+    class="bg-white dark:bg-gray-800 rounded-2xl shadow-md flex flex-col overflow-hidden max-h-full min-h-full border-2 border-gray-100 dark:border-gray-500"
   >
     <!-- Header Chat Section -->
     <HeaderBar :active-conversation="activeConversation || ({} as IConversation)" />

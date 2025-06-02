@@ -11,7 +11,7 @@
       >
         <div
           v-if="profileStore.loading"
-          class="bg-white/50 backdrop-blur-sm fixed top-0 left-0 w-full h-full flex items-center justify-center z-10"
+          class="bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm fixed top-0 left-0 w-full h-full flex items-center justify-center z-10"
         >
           <div class="w-[300px] h-[300px]">
             <Lottie name="default-loading" autoplay loop />
@@ -19,22 +19,28 @@
         </div>
       </Transition>
       <!-- Sidebar -->
-      <aside class="w-64 bg-white flex flex-col p-8 pt-8 pb-4 rounded-l-3xl shadow-md">
+      <aside
+        class="w-64 bg-white dark:bg-gray-900 flex flex-col p-8 pt-8 pb-4 rounded-l-3xl shadow-md"
+      >
         <div class="flex items-center mb-8">
-          <UIcon name="i-lucide-bot-message-square" size="2xl" class="mr-2" />
-          <span class="font-bold text-lg">WhatsDude</span>
+          <UIcon
+            name="i-lucide-bot-message-square"
+            size="2xl"
+            class="mr-2 text-gray-900 dark:text-gray-100"
+          />
+          <span class="font-bold text-lg text-gray-900 dark:text-gray-100">WhatsDude</span>
         </div>
 
         <nav class="flex-1">
           <UNavigationMenu
             :items="navItems"
             orientation="vertical"
-            class="data-[orientation=vertical]:w-48"
+            class="data-[orientation=vertical]:w-48 dark:text-gray-100"
           />
         </nav>
       </aside>
 
-      <div class="w-full">
+      <div class="w-full dark:bg-gray-800">
         <slot />
       </div>
     </div>

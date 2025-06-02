@@ -90,6 +90,7 @@
     title="Modal with title"
     description="Modal with description"
     :open="props.open"
+    class="dark:bg-gray-900"
     @update:open="emit('update:open', $event)"
   >
     <template #content>
@@ -98,7 +99,7 @@
         :loading="isLoading"
         multiple
         :groups="groups"
-        class="flex-1"
+        class="flex-1 dark:bg-gray-800 dark:text-gray-100"
       />
     </template>
   </UModal>

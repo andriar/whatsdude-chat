@@ -5,10 +5,10 @@
         class="w-2 h-2 rounded-full transition-all duration-300 ease-in-out"
         :class="{
           'bg-green-500': isOnline,
-          'bg-gray-300': !isOnline,
+          'bg-gray-300 dark:bg-gray-600': !isOnline,
         }"
       />
-      <span class="text-xs text-gray-500">
+      <span class="text-xs text-gray-500 dark:text-gray-400">
         {{ statusText }}
       </span>
     </div>

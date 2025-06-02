@@ -42,21 +42,26 @@
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <UCard class="w-full max-w-md">
+  <div class="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <UCard class="w-full max-w-md dark:bg-gray-800">
       <template #header>
-        <h1 class="text-xl font-bold">Login</h1>
+        <h1 class="text-xl font-bold text-gray-900 dark:text-gray-100">Login</h1>
       </template>
 
       <UForm :state="{ email, password }" @submit.prevent="onSubmit">
         <div class="flex flex-col gap-4">
-          <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
+          <UInput
+            v-model="email"
+            type="email"
+            placeholder="Enter your email"
+            class="w-full dark:bg-gray-700 dark:text-gray-100"
+          />
 
           <UInput
             v-model="password"
             type="password"
             placeholder="Enter your password"
-            class="w-full"
+            class="w-full dark:bg-gray-700 dark:text-gray-100"
           />
         </div>
 
@@ -64,9 +69,12 @@
           <UButton type="submit" color="primary" block :loading="loading">Login</UButton>
         </div>
 
-        <div class="mt-4 text-center text-sm text-gray-600">
+        <div class="mt-4 text-center text-sm text-gray-600 dark:text-gray-400">
           Don't have an account?
-          <NuxtLink to="/signup" class="text-primary-600 hover:text-primary-500">
+          <NuxtLink
+            to="/signup"
+            class="text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+          >
             Sign up here
           </NuxtLink>
         </div>

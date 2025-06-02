@@ -1,5 +1,5 @@
 <template>
-  <div class="flex-1 overflow-y-auto">
+  <div class="flex-1 overflow-y-auto dark:bg-gray-900">
     <RoomItem
       v-for="conv in items"
       :key="conv.id"
