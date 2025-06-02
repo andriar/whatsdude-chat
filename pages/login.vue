@@ -1,44 +1,44 @@
 <script setup>
-const email = ref('andriar.fazzan@gmail.com');
-const password = ref('12345678');
-const loading = ref(false);
+  const email = ref('')
+  const password = ref('')
+  const loading = ref(false)
 
-async function onSubmit() {
-  loading.value = true;
-  try {
-    const { error } = await useSupabaseClient().auth.signInWithPassword({
-      email: email.value,
-      password: password.value,
-    });
+  async function onSubmit() {
+    loading.value = true
+    try {
+      const { error } = await useSupabaseClient().auth.signInWithPassword({
+        email: email.value,
+        password: password.value,
+      })
 
-    if (error) {
-      const toast = useToast();
-      toast.add({
-        title: 'Login Failed',
-        description: error.message || 'There was a problem with your request.',
-        color: 'red',
-        icon: 'i-lucide-alert-circle',
-        timeout: 5000,
-      });
-      return;
+      if (error) {
+        const toast = useToast()
+        toast.add({
+          title: 'Login Failed',
+          description: error.message || 'There was a problem with your request.',
+          color: 'red',
+          icon: 'i-lucide-alert-circle',
+          timeout: 5000,
+        })
+        return
+      }
+
+      // Fetch user profile after successful login
+      const profileStore = useProfileStore()
+      await profileStore.fetchProfile()
+
+      // Navigate based on profile existence
+      if (!profileStore.profile) {
+        navigateTo('/profile-setup')
+      } else {
+        navigateTo('/inbox')
+      }
+    } catch (error) {
+      console.error('Login failed:', error)
+    } finally {
+      loading.value = false
     }
-
-    // Fetch user profile after successful login
-    const profileStore = useProfileStore();
-    await profileStore.fetchProfile();
-
-    // Navigate based on profile existence
-    if (!profileStore.profile) {
-      navigateTo('/profile-setup');
-    } else {
-      navigateTo('/inbox');
-    }
-  } catch (error) {
-    console.error('Login failed:', error);
-  } finally {
-    loading.value = false;
   }
-}
 </script>
 
 <template>
@@ -56,7 +56,8 @@ async function onSubmit() {
             v-model="password"
             type="password"
             placeholder="Enter your password"
-            class="w-full" />
+            class="w-full"
+          />
         </div>
 
         <div class="mt-4">
