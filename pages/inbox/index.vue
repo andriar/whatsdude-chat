@@ -83,7 +83,7 @@
 
   const createConversation = async (targetId: string) => {
     const existingConversation = conversationsStore.conversations.find(
-      conv => conv.sender_id === targetId
+      (conv: IConversation) => conv.sender_id === targetId
     )
 
     if (existingConversation) {

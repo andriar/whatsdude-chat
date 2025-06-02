@@ -1,3 +1,23 @@
+<template>
+  <UModal
+    title="Modal with title"
+    description="Modal with description"
+    :open="props.open"
+    class="dark:bg-gray-900"
+    @update:open="emit('update:open', $event)"
+  >
+    <template #content>
+      <UCommandPalette
+        v-model:search-term="searchTerm"
+        :loading="isLoading"
+        multiple
+        :groups="groups"
+        class="flex-1 dark:bg-gray-800 dark:text-gray-100"
+      />
+    </template>
+  </UModal>
+</template>
+
 <script setup lang="ts">
   const props = defineProps<{
     open: boolean
@@ -33,9 +53,9 @@
       .from('user_profiles')
       .select('*')
       .ilike('name', `%${searchTerm.value}%`)
+      .not('user_id', 'eq', useSupabaseUser().value?.id)
       .limit(10)
 
-    console.log('new data', data)
     if (error) {
       console.error('Error fetching users:', error)
       return []
@@ -84,23 +104,3 @@
     }
   )
 </script>
-
-<template>
-  <UModal
-    title="Modal with title"
-    description="Modal with description"
-    :open="props.open"
-    class="dark:bg-gray-900"
-    @update:open="emit('update:open', $event)"
-  >
-    <template #content>
-      <UCommandPalette
-        v-model:search-term="searchTerm"
-        :loading="isLoading"
-        multiple
-        :groups="groups"
-        class="flex-1 dark:bg-gray-800 dark:text-gray-100"
-      />
-    </template>
-  </UModal>
-</template>
