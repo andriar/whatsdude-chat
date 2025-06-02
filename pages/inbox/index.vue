@@ -1,13 +1,15 @@
 <template>
-  <div class="flex h-screen bg-gray-100 w-full">
+  <div class="flex h-screen bg-gray-100 dark:bg-gray-900 w-full">
     <main class="flex flex-1 p-8 gap-8">
       <!-- Inbox List -->
       <section
         v-if="conversationsStore.conversations.length > 0"
-        class="w-80 bg-white rounded-2xl shadow-md flex flex-col py-6"
+        class="w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-md flex flex-col py-6 border border-gray-100 dark:border-gray-500"
       >
-        <div class="flex items-center justify-between px-6 pb-4">
-          <h2 class="text-xl font-semibold">Inbox</h2>
+        <div
+          class="flex items-center justify-between px-6 pb-4 border-b border-gray-100 dark:border-gray-500"
+        >
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-gray-100">Inbox</h2>
           <UButton icon="i-lucide-plus" size="sm" variant="ghost" @click="openPopUp" />
         </div>
         <RoomListContainer
@@ -36,7 +38,7 @@
         >
           <div class="flex flex-col items-center justify-center gap-4 w-full">
             <Lottie name="conversation" autoplay loop width="300px" height="300px" />
-            <p class="text-gray-500">You don't have any conversations yet.</p>
+            <p class="text-gray-500 dark:text-gray-400">You don't have any conversations yet.</p>
 
             <UButton label="Create Conversation" @click="openPopUp" />
           </div>
@@ -45,7 +47,7 @@
         <EmptyChat v-else-if="messageStore.loading" class="absolute top-0 left-0 w-full h-full">
           <div class="flex flex-col items-center justify-center h-full">
             <Lottie name="default-loading" autoplay loop width="300px" height="300px" />
-            <p class="text-gray-500 -translate-y-24">Loading messages...</p>
+            <p class="text-gray-500 dark:text-gray-400 -translate-y-24">Loading messages...</p>
           </div>
         </EmptyChat>
       </div>

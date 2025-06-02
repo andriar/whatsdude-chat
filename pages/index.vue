@@ -1,43 +1,36 @@
 <script setup>
-const email = ref('');
-const password = ref('');
-const loading = ref(false);
+  const user = useSupabaseUser()
 
-async function onSubmit() {
-  loading.value = true;
-  try {
-    // Add your login logic here
-    await new Promise(resolve => setTimeout(resolve, 1000)); // Simulated API call
-  } catch (error) {
-    console.error('Login failed:', error);
-  } finally {
-    loading.value = false;
-  }
-}
+  // Redirect authenticated users to inbox
+  watchEffect(() => {
+    if (user.value) {
+      navigateTo('/inbox')
+    }
+  })
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-50">
-    <UCard class="w-full max-w-md">
-      <template #header>
-        <h1 class="text-xl font-bold">Login</h1>
-      </template>
+  <div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
+    <div class="text-center mb-12">
+      <div class="flex items-center justify-center mb-6">
+        <UIcon
+          name="i-lucide-bot-message-square"
+          size="4xl"
+          class="text-primary-600 dark:text-primary-400"
+        />
+      </div>
+      <h1 class="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">Welcome to WhatsDude</h1>
+      <p class="text-gray-600 dark:text-gray-400 text-lg mb-8">Your modern messaging platform</p>
+    </div>
 
-      <UForm :state="{ email, password }" @submit="onSubmit">
-        <div class="flex flex-col gap-4">
-          <UInput v-model="email" type="email" placeholder="Enter your email" class="w-full" />
+    <div class="flex gap-4">
+      <UButton to="/login" color="primary" size="lg"> Login </UButton>
 
-          <UInput
-            v-model="password"
-            type="password"
-            placeholder="Enter your password"
-            class="w-full" />
-        </div>
+      <UButton to="/signup" variant="outline" size="lg"> Sign Up </UButton>
+    </div>
 
-        <div class="mt-4">
-          <UButton type="submit" color="primary" block :loading="loading">Login</UButton>
-        </div>
-      </UForm>
-    </UCard>
+    <div class="mt-16">
+      <Lottie name="conversation" autoplay loop width="400px" height="400px" />
+    </div>
   </div>
 </template>
