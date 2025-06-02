@@ -24,7 +24,9 @@
         </div>
       </div>
       <div class="text-sm text-gray-400 dark:text-gray-500 flex items-center justify-between">
-        {{ conversation.preview }}
+        <div class="max-w-[200px] text-ellipsis overflow-hidden whitespace-nowrap">
+          {{ conversation.preview }}
+        </div>
         <div
           v-if="unread && unread !== '0'"
           class="bg-indigo-500 dark:bg-indigo-600 rounded-full text-white min-w-5 h-5 flex items-center justify-center text-xs"
