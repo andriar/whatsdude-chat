@@ -7,7 +7,9 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "dependencies": {
     "@formkit/auto-animate": "^0.8.2",
@@ -27,10 +29,17 @@
   },
   "packageManager": "pnpm@10.8.0+sha512.0e82714d1b5b43c74610193cb20734897c1d00de89d0e18420aebc5977fa13d780a9cb05734624e81ebd81cc876cd464794850641c48b9544326b5622ca29971",
   "devDependencies": {
+    "@chromatic-com/storybook": "^4",
     "@iconify-json/lucide": "^1.2.44",
+    "@nuxtjs/storybook": "^8.3.5",
     "@nuxtjs/supabase": "^1.5.1",
+    "@storybook/addon-a11y": "^9.0.4",
+    "@storybook/addon-docs": "^9.0.4",
+    "@storybook/addon-vitest": "^9.0.4",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.4.0",
-    "prettier": "^3.5.3"
+    "eslint-plugin-storybook": "^9.0.4",
+    "prettier": "^3.5.3",
+    "storybook": "^9.0.4"
   }
 }
