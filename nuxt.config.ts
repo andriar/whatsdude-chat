@@ -1,9 +1,9 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import tailwindcss from '@tailwindcss/vite';
-import { appConfig } from './config/app';
-import { seoConfig } from './config/seo';
-import { modulesConfig, fontsConfig, lottieConfig } from './config/modules';
-import { runtimeConfig, supabaseConfig } from './config/runtime';
+import tailwindcss from '@tailwindcss/vite'
+import { appConfig } from './config/app'
+import { seoConfig } from './config/seo'
+import { modulesConfig, fontsConfig, lottieConfig } from './config/modules'
+import { runtimeConfig, supabaseConfig } from './config/runtime'
 
 export default defineNuxtConfig({
   // App config
@@ -11,7 +11,7 @@ export default defineNuxtConfig({
   css: appConfig.css,
   devtools: appConfig.devtools,
   compatibilityDate: appConfig.compatibilityDate,
-  
+
   // Vite config
   vite: {
     plugins: [tailwindcss()],
@@ -37,4 +37,4 @@ export default defineNuxtConfig({
 
   // Runtime config
   runtimeConfig,
-});
+})
